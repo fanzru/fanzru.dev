@@ -36,16 +36,16 @@ export default async function BlogPost({ params }: BlogPostProps) {
   return (
     <div className="max-w-3xl mx-auto">
       <article className="mx-auto">
-        <header className="mb-8">
+        <header className="">
           <h1 className="text-4xl font-bold tracking-tight">
             {post.frontmatter.title}
           </h1>
           {post.frontmatter.excerpt && (
-            <p className="mt-4 text-xl text-neutral-400">
+            <p className="text-lg leading-relaxed text-neutral-400 mb-4 max-w-3xl">
               {post.frontmatter.excerpt}
             </p>
           )}
-          <div className="mt-6 flex items-center gap-3 text-sm text-neutral-400">
+          <div className="flex items-center gap-3 text-sm text-neutral-400 border-b border-neutral-800 pb-4">
             <time dateTime={post.frontmatter.date}>
               {new Date(post.frontmatter.date).toLocaleDateString("en-US", {
                 year: "numeric",

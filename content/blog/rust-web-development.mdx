@@ -1,0 +1,136 @@
+---
+title: "Web Development with Rust and Actix-web"
+date: "2024-03-16"
+category: "Development"
+excerpt: "A comprehensive guide to building modern web applications using Rust and Actix-web framework, with focus on performance and type safety."
+---
+
+# Web Development with Rust and Actix-web
+
+Rust is gaining popularity in web development due to its performance, safety guarantees, and growing ecosystem. In this guide, we'll explore how to build web applications using Rust and the Actix-web framework.
+
+## Why Rust for Web Development?
+
+Rust offers several advantages for web development:
+
+- **High Performance** and low latency
+- **Memory Safety** without garbage collection
+- **Fearless Concurrency**
+- **Rich Type System**
+- Growing web ecosystem
+
+## Setting Up Your Project
+
+Create a new Rust project with Cargo:
+
+```bash
+cargo new my-web-app
+cd my-web-app
+```
+
+Add dependencies to Cargo.toml:
+
+```toml
+[dependencies]
+actix-web = "4.4"
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.0", features = ["full"] }
+```
+
+### Project Structure
+
+A typical Rust web project structure:
+
+```text
+my-web-app/
+  ├── src/
+  │   ├── handlers/
+  │   ├── models/
+  │   ├── config/
+  │   └── main.rs
+  ├── Cargo.toml
+  └── .env
+```
+
+## Creating a Basic Web Server
+
+Here's a simple web server using Actix-web:
+
+```rust
+use actix_web::{web, App, HttpResponse, HttpServer};
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize)]
+struct Response {
+    message: String,
+}
+
+async fn hello() -> HttpResponse {
+    let response = Response {
+        message: String::from("Hello, Rust Web!"),
+    };
+    HttpResponse::Ok().json(response)
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .route("/", web::get().to(hello))
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
+}
+```
+
+## Adding Database Integration
+
+Using SQLx with PostgreSQL:
+
+```rust
+use sqlx::postgres::PgPoolOptions;
+
+#[derive(sqlx::FromRow)]
+struct User {
+    id: i32,
+    name: String,
+    email: String,
+}
+
+async fn init_db() -> sqlx::Pool<sqlx::Postgres> {
+    PgPoolOptions::new()
+        .max_connections(5)
+        .connect("postgres://user:pass@localhost/dbname")
+        .await
+        .expect("Failed to create pool")
+}
+```
+
+## Performance Optimization
+
+Here are some tips for optimizing your Rust web application:
+
+1. Use Connection Pooling
+
+```rust
+let pool = PgPoolOptions::new()
+    .max_connections(30)
+    .connect_timeout(Duration::from_secs(30))
+    .connect(&database_url)
+    .await?;
+```
+
+2. Implement Caching
+
+```rust
+use moka::sync::Cache;
+
+let cache: Cache<String, Vec<u8>> = Cache::builder()
+    .time_to_live(Duration::from_secs(30))
+    .build();
+```
+
+## Conclusion
+
+Rust provides a solid foundation for building high-performance web applications. With Actix-web and the growing ecosystem, you can create fast, safe, and maintainable web services.

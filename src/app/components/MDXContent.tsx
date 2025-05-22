@@ -150,7 +150,7 @@ export default function MDXContent({ content }: MDXContentProps) {
 
   return (
     <div className="relative">
-      <article className="prose prose-invert prose-gray mx-auto max-w-4xl pt-10 pb-32">
+      <article className="prose prose-invert prose-gray mx-auto max-w-4xl  pb-32">
         <div className="group">
           <MDXRemote
             source={content}
