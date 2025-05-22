@@ -37,11 +37,11 @@ const Navigation = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full">
       {/* Glassmorphism background */}
-      <div className="absolute inset-0 bg-[#0B1120]/80 backdrop-blur-md border-b border-white/10" />
+      <div className="absolute inset-0 w-full bg-[#0B1120]/80 backdrop-blur-md border-b border-white/10" />
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link
             href="/"
@@ -51,7 +51,7 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -69,7 +69,7 @@ const Navigation = () => {
                 />
               </Link>
             ))}
-          </nav>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -99,13 +99,13 @@ const Navigation = () => {
 
         {/* Mobile Navigation Overlay */}
         <div
-          className={`fixed inset-0 transition-all duration-300 md:hidden ${
+          className={`fixed inset-0 w-full transition-all duration-300 md:hidden ${
             isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
           }`}
           style={{ zIndex: 40 }}
         >
           {/* Glassmorphism background for mobile menu */}
-          <div className="absolute inset-0 bg-[#0B1120]/95 backdrop-blur-lg" />
+          <div className="absolute inset-0 w-full bg-[#0B1120]/95 backdrop-blur-lg" />
 
           <nav className="relative flex flex-col items-center justify-center h-screen">
             <div className="flex flex-col items-center space-y-8 w-full max-w-xs px-4">
@@ -143,7 +143,7 @@ const Navigation = () => {
             </div>
           </nav>
         </div>
-      </div>
+      </nav>
     </header>
   );
 };

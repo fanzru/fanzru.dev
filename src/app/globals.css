@@ -6,6 +6,11 @@
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 11, 17, 32;
   --background-end-rgb: 11, 17, 32;
+  --scrollbar-width: calc(100vw - 100%);
+}
+
+html {
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -14,6 +19,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  padding-right: 0 !important; /* Prevent layout shift when modal opens */
 }
 
 /* Enable text selection and pointer events globally */
@@ -23,6 +30,18 @@ body {
   -moz-user-select: text !important;
   -ms-user-select: text !important;
   pointer-events: auto !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* Prose styles for MDX content */
