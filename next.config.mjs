@@ -37,6 +37,17 @@ const nextConfig = {
       },
     ],
   },
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
+      },
+    },
+  },
+  experimental: {
+    mdxRs: true,
+  },
 };
 
 const withMDX = createMDX({

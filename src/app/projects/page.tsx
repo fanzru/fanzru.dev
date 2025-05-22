@@ -50,16 +50,16 @@ export default function Projects() {
             <div className="w-full border-t border-gray-800"></div>
           </div>
           <div className="relative flex justify-start">
-            <span className="pr-3 bg-[#0B1120] text-sm text-[#9333EA]">
+            <span className="pr-3 bg-[#0B1120] text-sm text-[#9333EA] ">
               PROJECTS
             </span>
           </div>
         </div>
 
-        <h1 className="mt-8 text-4xl font-bold text-white">
+        <h1 className="mt-8 text-4xl font-bold text-white ">
           Featured Projects
         </h1>
-        <p className="mt-4 text-xl text-gray-400">
+        <p className="mt-4 text-xl text-gray-400 ">
           A collection of my work in web development and distributed systems.
         </p>
 
@@ -73,15 +73,15 @@ export default function Projects() {
                 {/* Project image placeholder */}
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-white group-hover:text-[#9333EA] transition-colors">
+                <h3 className="text-xl font-semibold text-white group-hover:text-[#9333EA] transition-colors ">
                   {project.title}
                 </h3>
-                <p className="mt-3 text-gray-400">{project.description}</p>
+                <p className="mt-3 text-gray-400 ">{project.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {project.tags.map((tag, tagIndex) => (
                     <span
                       key={tagIndex}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#9333EA]/10 text-[#9333EA]"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#9333EA]/10 text-[#9333EA] "
                     >
                       {tag}
                     </span>
@@ -92,7 +92,7 @@ export default function Projects() {
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-[#9333EA] hover:text-white transition-colors"
+                    className="inline-flex items-center text-[#9333EA] hover:text-white transition-colors "
                   >
                     View Project
                     <svg

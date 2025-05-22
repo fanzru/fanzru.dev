@@ -16,7 +16,7 @@ export default function Home() {
             <div className="w-full border-t border-gray-800"></div>
           </div>
           <div className="relative flex justify-start">
-            <span className="pr-3 bg-[#0B1120] text-sm text-[#9333EA]">
+            <span className="pr-3 text-sm text-[#9333EA] bg-transparent">
               WELCOME TO MY SPACE
             </span>
           </div>

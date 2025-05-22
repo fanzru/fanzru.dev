@@ -51,6 +51,9 @@ const Footer = () => {
               Building innovative solutions at the intersection of web
               development and blockchain technology.
             </p>
+            <p className=" text-sm text-gray-400">
+              © {new Date().getFullYear()} Fanzru. All rights reserved.
+            </p>
           </article>
 
           {/* Quick links */}
@@ -95,11 +98,6 @@ const Footer = () => {
         </section>
 
         {/* Copyright */}
-        <section className="mt-8 pt-8 border-t border-white/10">
-          <p className="text-center text-sm text-gray-400">
-            © {new Date().getFullYear()} Fanzru. All rights reserved.
-          </p>
-        </section>
       </div>
     </footer>
   );

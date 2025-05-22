@@ -12,7 +12,8 @@ interface BlogPostProps {
 export async function generateMetadata({
   params,
 }: BlogPostProps): Promise<Metadata> {
-  const post = await getMDXContent(`blog/${params.slug}.mdx`);
+  const slug = await Promise.resolve(params.slug);
+  const post = await getMDXContent(`blog/${slug}.mdx`);
 
   if (!post) {
     return {};
@@ -25,7 +26,8 @@ export async function generateMetadata({
 }
 
 export default async function BlogPost({ params }: BlogPostProps) {
-  const post = await getMDXContent(`blog/${params.slug}.mdx`);
+  const slug = await Promise.resolve(params.slug);
+  const post = await getMDXContent(`blog/${slug}.mdx`);
 
   if (!post) {
     notFound();
