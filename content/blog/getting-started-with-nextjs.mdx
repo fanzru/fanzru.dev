@@ -1,0 +1,83 @@
+---
+title: "Getting Started with Next.js and TypeScript"
+date: "2024-03-15"
+category: "Development"
+excerpt: "A comprehensive guide to setting up a modern web application using Next.js 14 and TypeScript, with best practices and performance optimization tips."
+---
+
+# Getting Started with Next.js and TypeScript
+
+Next.js has become one of the most popular React frameworks for building modern web applications. In this guide, we'll explore how to set up a new project with Next.js 14 and TypeScript, following best practices and optimizing for performance.
+
+## Why Next.js?
+
+Next.js provides several advantages out of the box:
+
+- **Server-Side Rendering (SSR)** and **Static Site Generation (SSG)**
+- Built-in routing and API routes
+- Automatic code splitting
+- TypeScript support
+- Hot Module Replacement (HMR)
+- Image optimization
+
+## Setting Up Your Project
+
+First, create a new Next.js project with TypeScript:
+
+```
+npx create-next-app@latest my-app --typescript
+cd my-app
+```
+
+### Project Structure
+
+A typical Next.js project structure looks like this:
+
+```text
+my-app/
+  ├── app/
+  │   ├── layout.tsx
+  │   └── page.tsx
+  ├── components/
+  │   └── Button.tsx
+  ├── public/
+  │   └── images/
+  └── package.json
+```
+
+## Adding Tailwind CSS
+
+Tailwind CSS is a utility-first CSS framework that works great with Next.js:
+
+```
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+## Performance Optimization
+
+Here are some tips for optimizing your Next.js application:
+
+1. Use Image Component
+
+```tsx
+import Image from "next/image";
+
+export default function Hero() {
+  return (
+    <Image src="/hero.jpg" alt="Hero" width={1200} height={600} priority />
+  );
+}
+```
+
+2. Implement Dynamic Imports
+
+```tsx
+import dynamic from "next/dynamic";
+
+const DynamicComponent = dynamic(() => import("../components/Heavy"));
+```
+
+## Conclusion
+
+Next.js with TypeScript provides a robust foundation for building modern web applications. By following these best practices, you can create performant and maintainable applications that scale.
