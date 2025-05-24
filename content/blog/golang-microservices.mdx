@@ -23,7 +23,7 @@ Go offers several advantages for microservice architecture:
 
 First, create a new Go project with modules:
 
-```bash
+```terminal:setup.sh
 mkdir my-microservice
 cd my-microservice
 go mod init github.com/yourusername/my-microservice
@@ -33,7 +33,7 @@ go mod init github.com/yourusername/my-microservice
 
 A typical Go microservice structure looks like this:
 
-```text
+```text:project-structure.txt
 my-microservice/
   ├── cmd/
   │   └── server/
@@ -51,7 +51,7 @@ my-microservice/
 
 Here's a simple HTTP service using Go's standard library:
 
-```go
+```go:main.go{7-9,16-19}
 package main
 
 import (
@@ -78,7 +78,7 @@ func main() {
 
 Using GORM with PostgreSQL:
 
-```go
+```go:db.go
 import (
     "gorm.io/gorm"
     "gorm.io/driver/postgres"
@@ -100,7 +100,7 @@ Here are some tips for optimizing your Go microservice:
 
 1. Use Connection Pooling
 
-```go
+```go:connection_pool.go{3-5}
 db, err := sql.Open("postgres", dsn)
 db.SetMaxOpenConns(25)
 db.SetMaxIdleConns(25)
@@ -109,7 +109,7 @@ db.SetConnMaxLifetime(5*time.Minute)
 
 2. Implement Caching
 
-```go
+```go:cache.go
 import "github.com/go-redis/redis/v8"
 
 func initRedis() *redis.Client {
@@ -117,6 +117,33 @@ func initRedis() *redis.Client {
         Addr: "localhost:6379",
     })
 }
+```
+
+## Running in Docker
+
+You can containerize your Go microservice with a simple Dockerfile:
+
+```dockerfile:Dockerfile
+FROM golang:1.21 as builder
+
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -o myservice ./cmd/server
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/myservice .
+EXPOSE 8080
+CMD ["./myservice"]
+```
+
+And build/run it with:
+
+```terminal:docker-commands.sh
+docker build -t my-microservice .
+docker run -p 8080:8080 my-microservice
 ```
 
 ## Conclusion

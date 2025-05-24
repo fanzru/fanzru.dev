@@ -25,7 +25,7 @@ Go provides excellent built-in support for concurrency:
 
 Perfect for handling multiple tasks in parallel:
 
-```go
+```go:worker_pool.go
 func worker(id int, jobs <-chan int, results chan<- int) {
     for job := range jobs {
         fmt.Printf("Worker %d processing job %d\n", id, job)
@@ -63,7 +63,7 @@ func main() {
 
 Great for data processing workflows:
 
-```go
+```go:pipeline.go
 func generator(nums ...int) <-chan int {
     out := make(chan int)
     go func() {
@@ -104,7 +104,7 @@ func main() {
 
 Useful for distributing work and collecting results:
 
-```go
+```go:fan_out_fan_in.go
 func fanOut(ch <-chan int, n int) []<-chan int {
     channels := make([]<-chan int, n)
     for i := 0; i < n; i++ {
@@ -142,7 +142,7 @@ func fanIn(channels []<-chan int) <-chan int {
 
 Control the rate of operations:
 
-```go
+```go:rate_limiter.go
 func rateLimiter() {
     requests := make(chan int, 5)
     limiter := time.Tick(200 * time.Millisecond)
@@ -164,7 +164,7 @@ func handleRequest(req int) {
 
 Handle errors in concurrent operations:
 
-```go
+```go:error_handling.go{11-12,19-22}
 type Result struct {
     Value int
     Err   error
@@ -206,7 +206,7 @@ func main() {
 3. **Avoid Goroutine Leaks**: Make sure goroutines can exit
 4. **Use Context for Cancellation**:
 
-```go
+```go:context_cancellation.go
 func worker(ctx context.Context) {
     for {
         select {
@@ -225,6 +225,34 @@ func main() {
     go worker(ctx)
     // ... rest of the program
 }
+```
+
+## Running with Race Detector
+
+Go provides a built-in race detector to help identify race conditions:
+
+```terminal:race-detector.sh
+# Run with race detector
+go run -race main.go
+
+# Test with race detector
+go test -race ./...
+
+# Build with race detector
+go build -race -o myapp
+```
+
+## Benchmarking Concurrent Code
+
+You can benchmark your concurrent code to measure performance:
+
+```terminal:benchmark.sh
+# Create benchmark file: benchmark_test.go
+go test -bench=. -benchmem ./...
+
+# Compare with CPU profile
+go test -bench=. -cpuprofile=cpu.prof ./...
+go tool pprof cpu.prof
 ```
 
 ## Conclusion

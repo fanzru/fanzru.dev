@@ -1,0 +1,342 @@
+---
+title: "Rust for Embedded Systems Programming"
+date: "2024-03-23"
+category: "Development"
+excerpt: "Explore how Rust's safety guarantees and zero-cost abstractions make it an excellent choice for embedded systems and IoT devices, with practical examples for microcontroller programming."
+---
+
+# Rust for Embedded Systems Programming
+
+Rust is becoming increasingly popular for embedded systems development due to its memory safety guarantees without garbage collection, making it perfect for resource-constrained environments like microcontrollers and IoT devices.
+
+## Why Choose Rust for Embedded Systems?
+
+Rust offers several advantages for embedded development:
+
+- **Memory safety** without garbage collection
+- **Zero-cost abstractions** for efficient code
+- **Fine-grained control** over memory and hardware
+- Strong **type system** to prevent bugs at compile time
+- Growing **embedded ecosystem** with cross-platform support
+
+## Setting Up Your Environment
+
+Let's set up a development environment for embedded Rust:
+
+```terminal:setup-embedded.sh
+# Install Rust using rustup
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Add the Cortex-M target (for ARM microcontrollers)
+rustup target add thumbv7em-none-eabihf
+
+# Install cargo-embed tool for flashing and debugging
+cargo install cargo-embed
+
+# Install probe-run for a better debugging experience
+cargo install probe-run
+```
+
+## Your First Embedded Rust Project
+
+Create a new project for a microcontroller:
+
+```terminal:create-project.sh
+# Create a new project
+cargo new --bin blinky
+cd blinky
+
+# Add dependencies to Cargo.toml
+# (See Cargo.toml example below)
+```
+
+Set up your `Cargo.toml`:
+
+```toml:Cargo.toml
+[package]
+name = "blinky"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m = "0.7.7"
+cortex-m-rt = "0.7.3"
+panic-halt = "0.2.0"
+embedded-hal = "0.2.7"
+
+# Board-specific crate (example for STM32F4)
+[dependencies.stm32f4xx-hal]
+version = "0.14.0"
+features = ["stm32f411"]
+
+# This is required for using `cargo run`
+[profile.release]
+debug = true
+lto = true
+opt-level = "s"
+```
+
+## Blinking an LED
+
+Here's a simple example that blinks an LED on an STM32F4 microcontroller:
+
+```rust:src/main.rs
+#![no_std]
+#![no_main]
+
+use panic_halt as _;
+use cortex_m_rt::entry;
+use stm32f4xx_hal as hal;
+
+use crate::hal::{pac, prelude::*};
+
+#[entry]
+fn main() -> ! {
+    // Get access to the device specific peripherals
+    let dp = pac::Peripherals::take().unwrap();
+
+    // Take ownership of the RCC and GPIOA peripherals
+    let rcc = dp.RCC.constrain();
+    let gpioa = dp.GPIOA.split();
+
+    // Configure the clock
+    let clocks = rcc.cfgr.freeze();
+
+    // Configure PA5 as output (this is the LED pin on many STM32 boards)
+    let mut led = gpioa.pa5.into_push_pull_output();
+
+    // Create a delay abstraction based on SysTick
+    let mut delay = dp.TIM2.delay_ms(&clocks);
+
+    loop {
+        // Turn on the LED
+        led.set_high().unwrap();
+        delay.delay_ms(500_u32);
+
+        // Turn off the LED
+        led.set_low().unwrap();
+        delay.delay_ms(500_u32);
+    }
+}
+```
+
+## Memory Management in Embedded Rust
+
+Embedded systems often have very limited memory. Rust helps manage this effectively:
+
+```rust:memory_management.rs
+// Static allocation for critical data
+static mut BUFFER: [u8; 1024] = [0; 1024];
+
+// Using the singleton pattern for global state
+use core::sync::atomic::{AtomicUsize, Ordering};
+static COUNTER: AtomicUsize = AtomicUsize::new(0);
+
+fn increment_counter() {
+    COUNTER.fetch_add(1, Ordering::SeqCst);
+}
+
+// No heap allocation needed!
+fn process_data(data: &[u8]) -> u32 {
+    data.iter().map(|&x| x as u32).sum()
+}
+```
+
+## Handling Interrupts
+
+Rust's type system ensures safe access to hardware interrupts:
+
+```rust:interrupts.rs{12-19}
+use cortex_m::peripheral::NVIC;
+use stm32f4xx_hal::pac::{interrupt, Interrupt, EXTI};
+
+static mut LED: Option<Led> = None;
+
+#[entry]
+fn main() -> ! {
+    // Setup code...
+
+    // Store LED in a global variable
+    unsafe { LED = Some(led) };
+
+    // Configure the external interrupt
+    dp.SYSCFG.exticr1.modify(|_, w| w.exti0().pb0());
+    dp.EXTI.imr.modify(|_, w| w.mr0().set_bit());
+    dp.EXTI.ftsr.modify(|_, w| w.tr0().set_bit());
+
+    // Enable the interrupt
+    unsafe { NVIC::unmask(Interrupt::EXTI0) };
+
+    loop {
+        // Main loop code...
+    }
+}
+
+#[interrupt]
+fn EXTI0() {
+    // Clear the interrupt pending bit
+    unsafe {
+        (*EXTI::ptr()).pr.write(|w| w.pr0().set_bit());
+    }
+
+    // Toggle the LED
+    if let Some(led) = unsafe { LED.as_mut() } {
+        led.toggle().unwrap();
+    }
+}
+```
+
+## Communicating with Peripherals
+
+### I2C Example
+
+```rust:i2c_example.rs
+use embedded_hal::blocking::i2c::Write;
+
+fn read_temperature(i2c: &mut impl Write) -> Result<f32, Error> {
+    // Sensor address and register
+    const SENSOR_ADDR: u8 = 0x48;
+    const TEMP_REG: u8 = 0x00;
+
+    // Write to the temperature register
+    i2c.write(SENSOR_ADDR, &[TEMP_REG])?;
+
+    // Read the temperature value (2 bytes)
+    let mut buffer = [0u8; 2];
+    i2c.read(SENSOR_ADDR, &mut buffer)?;
+
+    // Convert to temperature value
+    let raw_temp = ((buffer[0] as u16) << 8) | (buffer[1] as u16);
+    let temp_celsius = raw_temp as f32 * 0.0625;
+
+    Ok(temp_celsius)
+}
+```
+
+### SPI Example
+
+```rust:spi_example.rs
+use embedded_hal::blocking::spi::{Transfer, Write};
+use embedded_hal::digital::v2::OutputPin;
+
+fn write_to_display<SPI, CS>(
+    spi: &mut SPI,
+    cs: &mut CS,
+    data: &[u8],
+) -> Result<(), Error>
+where
+    SPI: Transfer<u8> + Write<u8>,
+    CS: OutputPin,
+{
+    // Select the device
+    cs.set_low().map_err(|_| Error::Gpio)?;
+
+    // Send data
+    spi.write(data).map_err(|_| Error::Spi)?;
+
+    // Deselect the device
+    cs.set_high().map_err(|_| Error::Gpio)?;
+
+    Ok(())
+}
+```
+
+## Real-Time Considerations
+
+For real-time applications, predictable timing is crucial:
+
+```rust:real_time.rs
+// No dynamic memory allocation in critical paths
+fn process_sensor_data(buffer: &mut [u8; 64]) -> u32 {
+    // Process without any heap allocations
+    let mut sum = 0;
+    for byte in buffer.iter() {
+        sum += *byte as u32;
+    }
+    sum
+}
+
+// Use atomic operations for shared data
+use core::sync::atomic::{AtomicU32, Ordering};
+
+static LAST_READING: AtomicU32 = AtomicU32::new(0);
+
+fn update_reading(value: u32) {
+    LAST_READING.store(value, Ordering::Release);
+}
+
+fn get_reading() -> u32 {
+    LAST_READING.load(Ordering::Acquire)
+}
+```
+
+## Debugging and Testing
+
+Debug your embedded Rust applications:
+
+```terminal:debug-commands.sh
+# Flash and start a debug session
+cargo embed --release
+
+# Run with logging via RTT (Real-Time Transfer)
+cargo run --release
+
+# Generate optimized binary
+cargo objcopy --release -- -O binary firmware.bin
+```
+
+For unit testing, use Rust's built-in test framework:
+
+```rust:test_example.rs
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_crc_calculation() {
+        let data = [0x01, 0x02, 0x03, 0x04];
+        assert_eq!(calculate_crc(&data), 0x10);
+    }
+
+    // Use mocks for hardware-dependent code
+    #[test]
+    fn test_sensor_reading() {
+        let mut mock_i2c = MockI2C::new();
+        mock_i2c.expect_write()
+            .return_const(Ok(()));
+        mock_i2c.expect_read()
+            .return_const(Ok([0x12, 0x34]));
+
+        let result = read_temperature(&mut mock_i2c);
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), 23.45);
+    }
+}
+```
+
+## Running on Real Hardware
+
+Deploy your code to real hardware:
+
+```terminal:deploy-commands.sh
+# Build for specific target
+cargo build --release --target thumbv7em-none-eabihf
+
+# Flash using probe-run
+DEFMT_LOG=info cargo run --release
+
+# Flash using OpenOCD
+openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "program target/thumbv7em-none-eabihf/release/blinky verify reset exit"
+```
+
+## Conclusion
+
+Rust brings memory safety, zero-cost abstractions, and modern development practices to embedded systems. Its advantages include:
+
+- Preventing common bugs at compile time
+- Eliminating whole classes of runtime errors
+- Enabling confident concurrent code
+- Providing performance comparable to C/C++
+- Supporting a growing ecosystem of embedded libraries
+
+As microcontrollers and IoT devices become more powerful and complex, Rust's safety guarantees make it an excellent choice for reliable embedded systems development.

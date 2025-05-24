@@ -1,8 +1,8 @@
 ---
 title: "Advanced TypeScript: Mastering Type-Level Programming"
 date: "2024-03-18"
-description: "Deep dive into TypeScript's advanced type system features including conditional types, mapped types, and type inference"
-tags: ["typescript", "frontend", "type-system"]
+category: "Development"
+excerpt: "Deep dive into TypeScript's advanced type system features including conditional types, mapped types, and type inference"
 ---
 
 # Advanced TypeScript: Mastering Type-Level Programming
@@ -13,7 +13,7 @@ TypeScript's type system is incredibly powerful and can help catch bugs before t
 
 Conditional types allow you to create type-level if statements:
 
-```typescript
+```typescript:conditional-types.ts
 type IsString<T> = T extends string ? true : false;
 
 // Examples
@@ -23,7 +23,7 @@ type B = IsString<number>; // false
 
 ### Inferring Types with infer
 
-```typescript
+```typescript:type-inference.ts
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
 
 function add(a: number, b: number): number {
@@ -37,7 +37,7 @@ type AddReturn = ReturnType<typeof add>; // number
 
 Create new types by transforming properties of existing ones:
 
-```typescript
+```typescript:mapped-types.ts
 type Readonly<T> = {
   readonly [P in keyof T]: T[P];
 };
@@ -56,7 +56,7 @@ type ReadonlyUser = Readonly<User>;
 
 ### Advanced Mapped Type Modifiers
 
-```typescript
+```typescript:advanced-mapped-types.ts
 type Optional<T> = {
   [P in keyof T]?: T[P];
 };
@@ -75,7 +75,7 @@ type PartialNullable<T> = {
 
 Create complex string literal types:
 
-```typescript
+```typescript:template-literals.ts
 type EventName = "click" | "focus" | "blur";
 type EventHandler<T extends string> = `on${Capitalize<T>}`;
 
@@ -89,7 +89,7 @@ TypeScript provides several built-in utility types:
 
 ### Pick and Omit
 
-```typescript
+```typescript:pick-omit.ts
 interface Todo {
   title: string;
   description: string;
@@ -103,7 +103,7 @@ type TodoInfo = Omit<Todo, "completed" | "createdAt">;
 
 ### Record
 
-```typescript
+```typescript:record.ts
 type PageInfo = {
   title: string;
   url: string;
@@ -121,7 +121,7 @@ const pages: Pages = {
 
 ### Discriminated Unions
 
-```typescript
+```typescript:discriminated-unions.ts
 type Success<T> = {
   type: "success";
   data: T;
@@ -145,7 +145,7 @@ function handleResult(result: Result<number>) {
 
 ### Type Guards
 
-```typescript
+```typescript:type-guards.ts
 function isString(value: unknown): value is string {
   return typeof value === "string";
 }
@@ -159,7 +159,7 @@ function processValue(value: unknown) {
 
 ## Real-World Example: API Response Types
 
-```typescript
+```typescript:api-types.ts
 // API Response types
 type ApiResponse<T> = {
   data: T;
@@ -210,7 +210,7 @@ const users = await api.get("/users");
 
 1. **Use Type Inference When Possible**
 
-```typescript
+```typescript:type-inference-examples.ts
 // Let TypeScript infer complex types
 const map = new Map<string, number>();
 const [state, setState] = useState<number>(0);
@@ -218,7 +218,7 @@ const [state, setState] = useState<number>(0);
 
 2. **Avoid Type Assertions**
 
-```typescript
+```typescript:avoid-assertions.ts
 // Bad
 const value = someValue as string;
 
@@ -230,12 +230,27 @@ function isString(value: unknown): value is string {
 
 3. **Use Branded Types for Type Safety**
 
-```typescript
+```typescript:branded-types.ts
 type UserId = string & { readonly brand: unique symbol };
 
 function createUserId(id: string): UserId {
   return id as UserId;
 }
+```
+
+## Running the TypeScript Compiler
+
+You can check your types with the TypeScript compiler:
+
+```terminal:typescript-commands.sh
+# Install TypeScript globally
+npm install -g typescript
+
+# Check types without emitting JS files
+tsc --noEmit
+
+# Watch mode for development
+tsc --watch
 ```
 
 ## Conclusion

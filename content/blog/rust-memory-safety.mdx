@@ -1,8 +1,8 @@
 ---
 title: "Understanding Rust's Memory Safety Guarantees"
 date: "2024-03-19"
-description: "Deep dive into Rust's ownership system, borrowing rules, and how they prevent memory-related bugs at compile time"
-tags: ["rust", "systems-programming", "memory-safety"]
+category: "Development"
+excerpt: "Deep dive into Rust's ownership system, borrowing rules, and how they prevent memory-related bugs at compile time"
 ---
 
 # Understanding Rust's Memory Safety Guarantees
@@ -17,7 +17,7 @@ Rust's most distinctive feature is its ownership system, which guarantees memory
 2. When the owner goes out of scope, the value is dropped
 3. Ownership can be transferred (moved) to another variable
 
-```rust
+```rust:ownership.rs
 fn main() {
     let s1 = String::from("hello"); // s1 owns the string
     let s2 = s1;                    // ownership moves to s2
@@ -30,7 +30,7 @@ fn main() {
 
 Instead of transferring ownership, you can borrow values:
 
-```rust
+```rust:borrowing.rs
 fn calculate_length(s: &String) -> usize {
     s.len()
 }
@@ -49,7 +49,7 @@ fn main() {
    - Any number of immutable references
 2. References must always be valid
 
-```rust
+```rust:borrowing_rules.rs
 fn main() {
     let mut s = String::from("hello");
 
@@ -66,7 +66,7 @@ fn main() {
 
 Lifetimes ensure references are valid for the duration they're used:
 
-```rust
+```rust:lifetimes.rs
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     if x.len() > y.len() {
         x
@@ -80,22 +80,22 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 
 Rust provides several smart pointer types:
 
-### Box<T>
+### Box&lt;T&gt;
 
 For heap allocation:
 
-```rust
+```rust:box_example.rs
 fn main() {
     let b = Box::new(5);
     println!("b = {}", b);
 }
 ```
 
-### Rc<T>
+### Rc&lt;T&gt;
 
 For multiple ownership:
 
-```rust
+```rust:rc_example.rs
 use std::rc::Rc;
 
 fn main() {
@@ -107,11 +107,11 @@ fn main() {
 }
 ```
 
-### RefCell<T>
+### RefCell&lt;T&gt;
 
 For interior mutability:
 
-```rust
+```rust:refcell_example.rs
 use std::cell::RefCell;
 
 fn main() {
@@ -127,7 +127,7 @@ fn main() {
 
 Here's how we can implement a thread-safe counter using Rust's safety guarantees:
 
-```rust
+```rust:thread_safe_counter.rs{8-14}
 use std::sync::{Arc, Mutex};
 use std::thread;
 
@@ -158,7 +158,7 @@ Let's look at some common memory issues that Rust prevents:
 
 ### Use After Free
 
-```rust
+```rust:use_after_free.rs
 fn main() {
     let reference_to_nothing = dangle();
 }
@@ -171,7 +171,7 @@ fn dangle() -> &String {             // This won't compile!
 
 ### Double Free
 
-```rust
+```rust:double_free.rs
 fn main() {
     let s = String::from("hello");
     let s2 = s;  // ownership moved
@@ -182,7 +182,7 @@ fn main() {
 
 ### Data Races
 
-```rust
+```rust:data_races.rs
 use std::thread;
 
 fn main() {
@@ -197,6 +197,24 @@ fn main() {
         data.push(5);
     });
 }
+```
+
+## Running Rust Programs
+
+Here are some commands to run and test Rust code:
+
+```terminal:rust-commands.sh
+# Compile and run
+rustc main.rs
+./main
+
+# Using Cargo
+cargo new my_project
+cd my_project
+cargo run
+
+# Running with optimizations
+cargo run --release
 ```
 
 ## Conclusion

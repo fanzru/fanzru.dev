@@ -23,14 +23,14 @@ Rust offers several advantages for web development:
 
 Create a new Rust project with Cargo:
 
-```bash
+```terminal:setup.sh
 cargo new my-web-app
 cd my-web-app
 ```
 
 Add dependencies to Cargo.toml:
 
-```toml
+```toml:Cargo.toml
 [dependencies]
 actix-web = "4.4"
 serde = { version = "1.0", features = ["derive"] }
@@ -41,7 +41,7 @@ tokio = { version = "1.0", features = ["full"] }
 
 A typical Rust web project structure:
 
-```text
+```text:project-structure.txt
 my-web-app/
   ├── src/
   │   ├── handlers/
@@ -56,7 +56,7 @@ my-web-app/
 
 Here's a simple web server using Actix-web:
 
-```rust
+```rust:main.rs
 use actix_web::{web, App, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
 
@@ -88,7 +88,7 @@ async fn main() -> std::io::Result<()> {
 
 Using SQLx with PostgreSQL:
 
-```rust
+```rust:database.rs
 use sqlx::postgres::PgPoolOptions;
 
 #[derive(sqlx::FromRow)]
@@ -113,7 +113,7 @@ Here are some tips for optimizing your Rust web application:
 
 1. Use Connection Pooling
 
-```rust
+```rust:connection_pool.rs
 let pool = PgPoolOptions::new()
     .max_connections(30)
     .connect_timeout(Duration::from_secs(30))
@@ -123,12 +123,27 @@ let pool = PgPoolOptions::new()
 
 2. Implement Caching
 
-```rust
+```rust:caching.rs
 use moka::sync::Cache;
 
 let cache: Cache<String, Vec<u8>> = Cache::builder()
     .time_to_live(Duration::from_secs(30))
     .build();
+```
+
+## Running Your Application
+
+You can run your Rust web application with these commands:
+
+```terminal:run-commands.sh
+# Development mode with auto-reload
+cargo watch -x run
+
+# Build for production
+cargo build --release
+
+# Run the optimized binary
+./target/release/my-web-app
 ```
 
 ## Conclusion

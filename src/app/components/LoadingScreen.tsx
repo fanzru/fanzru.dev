@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SiSolana, SiWeb3Dotjs } from "react-icons/si";
+import { SiWeb3Dotjs } from "react-icons/si";
 
 export default function LoadingScreen({ show }: { show: boolean }) {
   const [progress, setProgress] = useState(0);
@@ -97,7 +97,7 @@ export default function LoadingScreen({ show }: { show: boolean }) {
             {dots.map((dot) => (
               <motion.div
                 key={dot.id}
-                className="absolute rounded-full bg-[#9333EA]/20"
+                className="absolute rounded-full bg-white/20"
                 initial={{
                   x: dot.x,
                   y: dot.y,
@@ -118,21 +118,6 @@ export default function LoadingScreen({ show }: { show: boolean }) {
             ))}
           </div>
 
-          {/* Logo animation */}
-          <motion.div
-            className="mb-12 text-[#14F195] flex items-center justify-center"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{
-              duration: 0.8,
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-            }}
-          >
-            <SiSolana size={60} className="text-[#14F195]" />
-          </motion.div>
-
           <motion.div
             className="flex flex-col items-center"
             initial={{ y: 20, opacity: 0 }}
@@ -146,7 +131,7 @@ export default function LoadingScreen({ show }: { show: boolean }) {
                   className="relative"
                   style={{
                     color: "transparent",
-                    WebkitTextStroke: "1px rgba(147, 51, 234, 0.5)",
+                    WebkitTextStroke: "1px rgba(255, 255, 255, 0.5)",
                     fontFamily: "sans-serif",
                   }}
                 >
@@ -176,7 +161,7 @@ export default function LoadingScreen({ show }: { show: boolean }) {
                         {/* Character with clip-path for wave effect */}
                         <div
                           style={{
-                            color: "#9333EA",
+                            color: "white",
                             fontFamily: "sans-serif",
                             clipPath: `polygon(0 ${100 - fillPercent}%, 100% ${
                               100 - fillPercent - waveAngle
@@ -202,13 +187,12 @@ export default function LoadingScreen({ show }: { show: boolean }) {
             >
               <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[#9333EA] to-[#14F195]"
+                  className="h-full bg-white"
                   style={{ width: `${progress * 100}%` }}
                 />
               </div>
               <div className="mt-3 flex justify-between text-sm text-gray-500">
                 <div className="flex items-center">
-                  <SiWeb3Dotjs className="mr-2 text-[#9333EA]" />
                   <span className="text-white/60">Loading experience</span>
                 </div>
                 <div className="text-white/60">
