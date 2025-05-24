@@ -4,15 +4,16 @@ import { getMDXContent } from "@/lib/mdx";
 import MDXContent from "@/app/components/MDXContent";
 
 interface BlogPostProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export async function generateMetadata({
   params,
 }: BlogPostProps): Promise<Metadata> {
-  const slug = await Promise.resolve(params.slug);
+  const { slug } = await params;
   const post = await getMDXContent(`blog/${slug}.mdx`);
 
   if (!post) {
@@ -26,7 +27,7 @@ export async function generateMetadata({
 }
 
 export default async function BlogPost({ params }: BlogPostProps) {
-  const slug = await Promise.resolve(params.slug);
+  const { slug } = await params;
   const post = await getMDXContent(`blog/${slug}.mdx`);
 
   if (!post) {
