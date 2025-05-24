@@ -1,0 +1,265 @@
+---
+title: "Advanced TypeScript: Mastering Type-Level Programming"
+date: "2024-03-18"
+category: "Development"
+excerpt: "Deep dive into TypeScript's advanced type system features including conditional types, mapped types, and type inference"
+---
+
+# Advanced TypeScript: Mastering Type-Level Programming
+
+TypeScript's type system is incredibly powerful and can help catch bugs before they make it to production. Let's explore some advanced type features that make TypeScript unique.
+
+## Conditional Types
+
+Conditional types allow you to create type-level if statements:
+
+```typescript:conditional-types.ts
+type IsString<T> = T extends string ? true : false;
+
+// Examples
+type A = IsString<string>; // true
+type B = IsString<number>; // false
+```
+
+### Inferring Types with infer
+
+```typescript:type-inference.ts
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+type AddReturn = ReturnType<typeof add>; // number
+```
+
+## Mapped Types
+
+Create new types by transforming properties of existing ones:
+
+```typescript:mapped-types.ts
+type Readonly<T> = {
+  readonly [P in keyof T]: T[P];
+};
+
+interface User {
+  name: string;
+  age: number;
+}
+
+type ReadonlyUser = Readonly<User>;
+// {
+//     readonly name: string;
+//     readonly age: number;
+// }
+```
+
+### Advanced Mapped Type Modifiers
+
+```typescript:advanced-mapped-types.ts
+type Optional<T> = {
+  [P in keyof T]?: T[P];
+};
+
+type Nullable<T> = {
+  [P in keyof T]: T[P] | null;
+};
+
+// Combining modifiers
+type PartialNullable<T> = {
+  [P in keyof T]?: T[P] | null;
+};
+```
+
+## Template Literal Types
+
+Create complex string literal types:
+
+```typescript:template-literals.ts
+type EventName = "click" | "focus" | "blur";
+type EventHandler<T extends string> = `on${Capitalize<T>}`;
+
+type AllEventHandlers = EventHandler<EventName>;
+// "onClick" | "onFocus" | "onBlur"
+```
+
+## Utility Types
+
+TypeScript provides several built-in utility types:
+
+### Pick and Omit
+
+```typescript:pick-omit.ts
+interface Todo {
+  title: string;
+  description: string;
+  completed: boolean;
+  createdAt: number;
+}
+
+type TodoPreview = Pick<Todo, "title" | "completed">;
+type TodoInfo = Omit<Todo, "completed" | "createdAt">;
+```
+
+### Record
+
+```typescript:record.ts
+type PageInfo = {
+  title: string;
+  url: string;
+};
+
+type Pages = Record<string, PageInfo>;
+
+const pages: Pages = {
+  home: { title: "Home", url: "/" },
+  about: { title: "About", url: "/about" },
+};
+```
+
+## Advanced Type Patterns
+
+### Discriminated Unions
+
+```typescript:discriminated-unions.ts
+type Success<T> = {
+  type: "success";
+  data: T;
+};
+
+type Error = {
+  type: "error";
+  error: string;
+};
+
+type Result<T> = Success<T> | Error;
+
+function handleResult(result: Result<number>) {
+  if (result.type === "success") {
+    console.log(result.data); // TypeScript knows this is number
+  } else {
+    console.log(result.error); // TypeScript knows this is string
+  }
+}
+```
+
+### Type Guards
+
+```typescript:type-guards.ts
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function processValue(value: unknown) {
+  if (isString(value)) {
+    console.log(value.toUpperCase()); // TypeScript knows value is string
+  }
+}
+```
+
+## Real-World Example: API Response Types
+
+```typescript:api-types.ts
+// API Response types
+type ApiResponse<T> = {
+  data: T;
+  status: number;
+  message: string;
+  timestamp: number;
+};
+
+// Entity types
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  authorId: number;
+}
+
+// API function types
+type ApiEndpoints = {
+  "/users": User[];
+  "/users/:id": User;
+  "/posts": Post[];
+  "/posts/:id": Post;
+};
+
+// Type-safe API client
+class ApiClient {
+  async get<T extends keyof ApiEndpoints>(
+    endpoint: T
+  ): Promise<ApiResponse<ApiEndpoints[T]>> {
+    const response = await fetch(endpoint);
+    return response.json();
+  }
+}
+
+// Usage
+const api = new ApiClient();
+const users = await api.get("/users");
+// TypeScript knows users is ApiResponse<User[]>
+```
+
+## Best Practices
+
+1. **Use Type Inference When Possible**
+
+```typescript:type-inference-examples.ts
+// Let TypeScript infer complex types
+const map = new Map<string, number>();
+const [state, setState] = useState<number>(0);
+```
+
+2. **Avoid Type Assertions**
+
+```typescript:avoid-assertions.ts
+// Bad
+const value = someValue as string;
+
+// Good
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+```
+
+3. **Use Branded Types for Type Safety**
+
+```typescript:branded-types.ts
+type UserId = string & { readonly brand: unique symbol };
+
+function createUserId(id: string): UserId {
+  return id as UserId;
+}
+```
+
+## Running the TypeScript Compiler
+
+You can check your types with the TypeScript compiler:
+
+```terminal:typescript-commands.sh
+# Install TypeScript globally
+npm install -g typescript
+
+# Check types without emitting JS files
+tsc --noEmit
+
+# Watch mode for development
+tsc --watch
+```
+
+## Conclusion
+
+TypeScript's type system is a powerful tool for building robust applications. By understanding these advanced features, you can:
+
+- Write more type-safe code
+- Catch bugs at compile time
+- Create better developer experiences
+- Build maintainable applications
+
+Remember that types are documentation. Use them wisely to make your code more understandable and maintainable.

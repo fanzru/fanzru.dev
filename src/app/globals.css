@@ -1,26 +1,156 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 11, 17, 32;
+  --background-end-rgb: 11, 17, 32;
+  --scrollbar-width: calc(100vw - 100%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scrollbar-gutter: stable;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding-right: 0 !important; /* Prevent layout shift when modal opens */
+}
+
+/* Enable text selection and pointer events globally */
+* {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  pointer-events: auto !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Ensure Three.js canvas is transparent */
+canvas {
+  background: transparent !important;
+}
+
+/* Force transparent background on Three.js containers */
+div[data-three] {
+  background: transparent !important;
+  isolation: isolate;
+}
+
+/* Remove any white background from Three.js */
+.three-root,
+.three-container,
+.r3f-canvas {
+  background: transparent !important;
+}
+
+/* Prose styles for MDX content */
+.prose {
+  max-width: 100ch;
+  color: rgb(var(--foreground-rgb));
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: white;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.prose p {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  line-height: 1.8;
+}
+
+.prose a {
+  color: #9333ea;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.prose a:hover {
+  color: #a855f7;
+}
+
+.prose code {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+  font-size: 0.9em;
+}
+
+.prose pre {
+  background-color: #1e1e1e;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: #e5e7eb;
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+}
+
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose blockquote {
+  border-left: 4px solid #9333ea;
+  padding-left: 1em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 51, 234, 0.7);
 }

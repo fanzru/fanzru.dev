@@ -1,0 +1,151 @@
+---
+title: "Building Microservices with Go"
+date: "2024-03-17"
+category: "Development"
+excerpt: "Learn how to build scalable microservices using Go, with practical examples of service discovery, message queues, and containerization."
+---
+
+# Building Microservices with Go
+
+Go has become a popular choice for building microservices due to its excellent performance, built-in concurrency support, and comprehensive standard library. In this guide, we'll explore how to build robust microservices using Go and modern tools.
+
+## Why Go for Microservices?
+
+Go offers several advantages for microservice architecture:
+
+- **Fast compilation** and execution
+- Built-in **concurrency** support
+- **Small binary** sizes
+- Excellent **standard library**
+- Strong **community** support
+
+## Setting Up Your Project
+
+First, create a new Go project with modules:
+
+```terminal:setup.sh
+mkdir my-microservice
+cd my-microservice
+go mod init github.com/yourusername/my-microservice
+```
+
+### Project Structure
+
+A typical Go microservice structure looks like this:
+
+```text:project-structure.txt
+my-microservice/
+  ├── cmd/
+  │   └── server/
+  │       └── main.go
+  ├── internal/
+  │   ├── handlers/
+  │   ├── models/
+  │   └── service/
+  ├── pkg/
+  │   └── middleware/
+  └── go.mod
+```
+
+## Creating a Basic Service
+
+Here's a simple HTTP service using Go's standard library:
+
+```go:main.go{7-9,16-19}
+package main
+
+import (
+    "encoding/json"
+    "log"
+    "net/http"
+)
+
+type Response struct {
+    Message string `json:"message"`
+}
+
+func main() {
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        response := Response{Message: "Hello, Microservice!"}
+        json.NewEncoder(w).Encode(response)
+    })
+
+    log.Fatal(http.ListenAndServe(":8080", nil))
+}
+```
+
+## Adding Database Connection
+
+Using GORM with PostgreSQL:
+
+```go:db.go
+import (
+    "gorm.io/gorm"
+    "gorm.io/driver/postgres"
+)
+
+func initDB() *gorm.DB {
+    dsn := "host=localhost user=postgres password=postgres dbname=myapp port=5432"
+    db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+    if err != nil {
+        panic("failed to connect database")
+    }
+    return db
+}
+```
+
+## Performance Optimization
+
+Here are some tips for optimizing your Go microservice:
+
+1. Use Connection Pooling
+
+```go:connection_pool.go{3-5}
+db, err := sql.Open("postgres", dsn)
+db.SetMaxOpenConns(25)
+db.SetMaxIdleConns(25)
+db.SetConnMaxLifetime(5*time.Minute)
+```
+
+2. Implement Caching
+
+```go:cache.go
+import "github.com/go-redis/redis/v8"
+
+func initRedis() *redis.Client {
+    return redis.NewClient(&redis.Options{
+        Addr: "localhost:6379",
+    })
+}
+```
+
+## Running in Docker
+
+You can containerize your Go microservice with a simple Dockerfile:
+
+```dockerfile:Dockerfile
+FROM golang:1.21 as builder
+
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -o myservice ./cmd/server
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/myservice .
+EXPOSE 8080
+CMD ["./myservice"]
+```
+
+And build/run it with:
+
+```terminal:docker-commands.sh
+docker build -t my-microservice .
+docker run -p 8080:8080 my-microservice
+```
+
+## Conclusion
+
+Go provides an excellent foundation for building microservices. By following these patterns and best practices, you can create efficient and maintainable microservices that scale well.

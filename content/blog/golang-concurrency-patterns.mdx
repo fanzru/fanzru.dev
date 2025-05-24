@@ -1,0 +1,267 @@
+---
+title: "Mastering Go Concurrency Patterns"
+date: "2024-03-15"
+category: "Development"
+excerpt: "A practical guide to understanding and implementing common concurrency patterns in Go, including goroutines, channels, and synchronization primitives."
+---
+
+# Mastering Go Concurrency Patterns
+
+Go's concurrency model makes it easy to write programs that get the most out of multicore and networked machines. Let's explore common concurrency patterns and how to implement them effectively.
+
+## Why Go for Concurrency?
+
+Go provides excellent built-in support for concurrency:
+
+- **Goroutines** for lightweight concurrent execution
+- **Channels** for safe communication between goroutines
+- **Select** for handling multiple channel operations
+- Built-in **race detector**
+- Simple and powerful **sync** package
+
+## Basic Concurrency Patterns
+
+### 1. Worker Pool Pattern
+
+Perfect for handling multiple tasks in parallel:
+
+```go:worker_pool.go
+func worker(id int, jobs <-chan int, results chan<- int) {
+    for job := range jobs {
+        fmt.Printf("Worker %d processing job %d\n", id, job)
+        time.Sleep(time.Second) // Simulate work
+        results <- job * 2
+    }
+}
+
+func main() {
+    const numJobs = 5
+    const numWorkers = 3
+
+    jobs := make(chan int, numJobs)
+    results := make(chan int, numJobs)
+
+    // Start workers
+    for w := 1; w <= numWorkers; w++ {
+        go worker(w, jobs, results)
+    }
+
+    // Send jobs
+    for j := 1; j <= numJobs; j++ {
+        jobs <- j
+    }
+    close(jobs)
+
+    // Collect results
+    for a := 1; a <= numJobs; a++ {
+        <-results
+    }
+}
+```
+
+### 2. Pipeline Pattern
+
+Great for data processing workflows:
+
+```go:pipeline.go
+func generator(nums ...int) <-chan int {
+    out := make(chan int)
+    go func() {
+        defer close(out)
+        for _, n := range nums {
+            out <- n
+        }
+    }()
+    return out
+}
+
+func square(in <-chan int) <-chan int {
+    out := make(chan int)
+    go func() {
+        defer close(out)
+        for n := range in {
+            out <- n * n
+        }
+    }()
+    return out
+}
+
+func main() {
+    // Set up pipeline
+    numbers := generator(1, 2, 3, 4)
+    squares := square(numbers)
+
+    // Consume results
+    for result := range squares {
+        fmt.Println(result)
+    }
+}
+```
+
+## Advanced Patterns
+
+### 1. Fan-Out, Fan-In Pattern
+
+Useful for distributing work and collecting results:
+
+```go:fan_out_fan_in.go
+func fanOut(ch <-chan int, n int) []<-chan int {
+    channels := make([]<-chan int, n)
+    for i := 0; i < n; i++ {
+        channels[i] = processData(ch)
+    }
+    return channels
+}
+
+func fanIn(channels []<-chan int) <-chan int {
+    var wg sync.WaitGroup
+    merged := make(chan int)
+
+    output := func(c <-chan int) {
+        defer wg.Done()
+        for n := range c {
+            merged <- n
+        }
+    }
+
+    wg.Add(len(channels))
+    for _, c := range channels {
+        go output(c)
+    }
+
+    go func() {
+        wg.Wait()
+        close(merged)
+    }()
+
+    return merged
+}
+```
+
+### 2. Rate Limiting Pattern
+
+Control the rate of operations:
+
+```go:rate_limiter.go
+func rateLimiter() {
+    requests := make(chan int, 5)
+    limiter := time.Tick(200 * time.Millisecond)
+
+    for req := range requests {
+        <-limiter // Rate limit our requests
+        go handleRequest(req)
+    }
+}
+
+func handleRequest(req int) {
+    fmt.Printf("Handling request %d\n", req)
+}
+```
+
+## Error Handling Patterns
+
+### 1. Error Channel Pattern
+
+Handle errors in concurrent operations:
+
+```go:error_handling.go{11-12,19-22}
+type Result struct {
+    Value int
+    Err   error
+}
+
+func process(jobs <-chan int) <-chan Result {
+    results := make(chan Result)
+    go func() {
+        defer close(results)
+        for j := range jobs {
+            if j < 0 {
+                results <- Result{Err: fmt.Errorf("invalid job: %d", j)}
+                continue
+            }
+            results <- Result{Value: j * 2}
+        }
+    }()
+    return results
+}
+
+func main() {
+    jobs := make(chan int, 5)
+    results := process(jobs)
+
+    for r := range results {
+        if r.Err != nil {
+            fmt.Printf("Error: %v\n", r.Err)
+            continue
+        }
+        fmt.Printf("Result: %d\n", r.Value)
+    }
+}
+```
+
+## Best Practices
+
+1. **Always Close Channels**: The producer should close the channel
+2. **Handle Panics**: Use recover() in goroutines
+3. **Avoid Goroutine Leaks**: Make sure goroutines can exit
+4. **Use Context for Cancellation**:
+
+```go:context_cancellation.go
+func worker(ctx context.Context) {
+    for {
+        select {
+        case <-ctx.Done():
+            return
+        default:
+            // Do work
+        }
+    }
+}
+
+func main() {
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+    defer cancel()
+
+    go worker(ctx)
+    // ... rest of the program
+}
+```
+
+## Running with Race Detector
+
+Go provides a built-in race detector to help identify race conditions:
+
+```terminal:race-detector.sh
+# Run with race detector
+go run -race main.go
+
+# Test with race detector
+go test -race ./...
+
+# Build with race detector
+go build -race -o myapp
+```
+
+## Benchmarking Concurrent Code
+
+You can benchmark your concurrent code to measure performance:
+
+```terminal:benchmark.sh
+# Create benchmark file: benchmark_test.go
+go test -bench=. -benchmem ./...
+
+# Compare with CPU profile
+go test -bench=. -cpuprofile=cpu.prof ./...
+go tool pprof cpu.prof
+```
+
+## Conclusion
+
+Go's concurrency primitives make it easy to write concurrent programs that are both efficient and maintainable. By understanding these patterns, you can:
+
+- Build highly concurrent applications
+- Handle complex workflows efficiently
+- Manage resources effectively
+- Write clean and maintainable code
+
+Remember to always consider error handling and proper resource cleanup when working with concurrent code.
