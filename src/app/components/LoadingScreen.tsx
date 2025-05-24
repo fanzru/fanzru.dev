@@ -1,90 +1,144 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-export default function LoadingScreen() {
-  const [isLoading, setIsLoading] = useState(true);
+export default function LoadingScreen({ show }: { show: boolean }) {
+  const [progress, setProgress] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
+  // Animation effect - sync with parent component's timeout
   useEffect(() => {
-    // Simulate minimum loading time
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
-  }, []);
+    if (!show) {
+      setProgress(0);
+      setIsComplete(false);
+      return;
+    }
 
-  if (!isLoading) return null;
+    // Reset states
+    setProgress(0);
+    setIsComplete(false);
+
+    // Use requestAnimationFrame for smoother animation
+    let startTime: number;
+    let animationId: number;
+
+    const animateWave = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+
+      // Duration matched with ClientLayoutShell timeout (4300ms)
+      const elapsed = timestamp - startTime;
+      const duration = 4300;
+      const progress = Math.min(elapsed / duration, 1);
+
+      setProgress(progress);
+
+      if (progress < 1) {
+        animationId = requestAnimationFrame(animateWave);
+      } else {
+        setIsComplete(true);
+      }
+    };
+
+    animationId = requestAnimationFrame(animateWave);
+
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, [show]);
+
+  const displayText = "hi there!, i'm fanzru";
+
+  // Calculate optimal parameters based on text length
+  const textLength = displayText.length;
+  // Shorter delay for longer text
+  const charDelayFactor = Math.max(0.04, 0.1 - textLength * 0.002);
+  // Faster wave speed for longer text
+  const waveSpeedFactor = Math.min(2.0, 1.3 + textLength * 0.02);
 
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1, ease: "easeInOut" }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0B1120] min-h-screen w-full"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}
-    >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-center"
-      >
+    <AnimatePresence mode="wait">
+      {show && (
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{
-            scale: 1,
-            opacity: [0, 1, 1, 0],
-            transition: {
-              opacity: {
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "reverse",
-              },
-              scale: {
-                duration: 0.5,
-              },
-            },
-          }}
-          className="text-5xl md:text-7xl font-bold tracking-tight flex items-center gap-2"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0B1120]"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          <span className="text-white">fanzru</span>
-          <motion.span
-            animate={{
-              color: ["#9333EA", "#A855F7", "#9333EA"],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+          <motion.div
+            className="flex flex-col items-center"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4 }}
           >
-            .
-          </motion.span>
-          <span className="text-white">dev</span>
-          <motion.span
-            initial={{ opacity: 0, x: -20 }}
-            animate={{
-              opacity: 1,
-              x: 0,
-              color: ["#9333EA", "#A855F7", "#9333EA"],
-            }}
-            transition={{
-              opacity: { duration: 0.5, delay: 0.3 },
-              x: { duration: 0.5, delay: 0.3 },
-              color: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-            }}
-            className="font-light"
-          >
-            world
-          </motion.span>
+            <div className="text-[40px] sm:text-[60px] font-bold tracking-tight text-center relative">
+              <div className="overflow-hidden">
+                {/* Static outline text */}
+                <div
+                  className="relative"
+                  style={{
+                    color: "transparent",
+                    WebkitTextStroke: "1px white",
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  {displayText}
+                </div>
+
+                {/* Each character with wave animation */}
+                <div className="absolute top-0 left-0 flex whitespace-pre">
+                  {displayText.split("").map((char, index) => {
+                    // Calculate wave offset for each character
+                    const charOffset = index * charDelayFactor;
+                    // Adjusted wave speed based on text length
+                    const wavePosition = Math.max(
+                      0,
+                      progress * waveSpeedFactor - charOffset
+                    );
+                    const fillPercent = Math.min(1, wavePosition) * 100;
+
+                    // Dynamic wave angle
+                    const waveAngle = 8 + Math.sin(index * 0.3) * 4;
+
+                    return (
+                      <div
+                        key={index}
+                        className="relative inline-block overflow-hidden"
+                      >
+                        {/* Character with clip-path for wave effect */}
+                        <div
+                          style={{
+                            color: "white",
+                            fontFamily: "sans-serif",
+                            clipPath: `polygon(0 ${100 - fillPercent}%, 100% ${
+                              100 - fillPercent - waveAngle
+                            }%, 100% 100%, 0 100%)`,
+                            transition: "clip-path 0.1s ease-out",
+                          }}
+                        >
+                          {char}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Loading indicator with smoother transition */}
+            <motion.div
+              className="mt-4 text-white/60"
+              animate={{ opacity: isComplete ? 0 : 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              loading... {Math.round(progress * 100)}%
+            </motion.div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
