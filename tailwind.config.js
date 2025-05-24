@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-playfair)", "serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         primary: {
@@ -30,15 +34,19 @@ module.exports = {
             },
             h1: {
               color: "#fff",
+              fontFamily: "var(--font-playfair)",
             },
             h2: {
               color: "#fff",
+              fontFamily: "var(--font-playfair)",
             },
             h3: {
               color: "#fff",
+              fontFamily: "var(--font-playfair)",
             },
             h4: {
               color: "#fff",
+              fontFamily: "var(--font-playfair)",
             },
             strong: {
               color: "#fff",

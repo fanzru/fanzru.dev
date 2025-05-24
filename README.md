@@ -1,37 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# fanzru.dev
+
+Personal website built with Next.js 15, React 19, and TailwindCSS.
+
+## Features
+
+- Built with Next.js 15 and React 19
+- MDX for blog content
+- Three.js and React Three Fiber for 3D elements
+- Responsive design with TailwindCSS
+- Framer Motion for animations
 
 ## Getting Started
 
-First, run the development server:
+### Development
+
+Run the development server:
 
 ```bash
+# Using npm
 npm run dev
-# or
+
+# Using yarn
 yarn dev
-# or
+
+# Using pnpm
 pnpm dev
-# or
+
+# Using bun (recommended)
 bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Using npm
+npm run build
+
+# Using bun
+bun run build
+```
+
+## Docker Deployment
+
+The project includes a multi-stage Dockerfile with a distroless production image for optimal security and size.
+
+### Build the Docker image
+
+```bash
+docker build -t fanzru-dev .
+```
+
+### Run the Docker container
+
+```bash
+docker run -p 3000:3000 fanzru-dev
+```
+
+## Project Structure
+
+- `src/app/` - Next.js application pages and routes
+- `src/components/` - Reusable React components
+- `src/lib/` - Utilities and helper functions
+- `content/blog/` - MDX blog content
+- `public/` - Static assets
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://react.dev/)
+- [TailwindCSS Documentation](https://tailwindcss.com/docs)
+- [MDX](https://mdxjs.com/)
+- [Three.js](https://threejs.org/docs/)
+- [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/)
 
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# fanzru.dev

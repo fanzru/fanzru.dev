@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Logo from "./Logo";
 import { useState, useEffect } from "react";
+import { FaXTwitter, FaGithub } from "react-icons/fa6";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -23,7 +24,7 @@ const Navigation = () => {
 
   const isActive = (path: string) => {
     if (pathname === path) {
-      return "text-white";
+      return "text-white font-medium";
     }
     return "text-gray-300 hover:text-white";
   };
@@ -50,51 +51,77 @@ const Navigation = () => {
             <Logo />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`${isActive(item.path)} 
-                  px-4 py-2 relative transition-all duration-200
-                  group flex flex-col items-center min-w-[80px]`}
-              >
-                <span>{item.label}</span>
-                <div
-                  className={`absolute bottom-0 h-[1px] bg-white/70 transition-all duration-300
-                    ${
-                      pathname === item.path ? "w-12" : "w-0 group-hover:w-12"
-                    }`}
-                />
-              </Link>
-            ))}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-300 hover:text-white relative z-50 transition-all duration-300"
-            aria-label="Toggle menu"
-          >
-            <div className="w-6 h-6 relative flex items-center justify-center">
-              <span
-                className={`block absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
-                  isMenuOpen ? "rotate-45" : "-translate-y-1.5"
-                }`}
-              />
-              <span
-                className={`block absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
-                  isMenuOpen ? "opacity-0" : "opacity-100"
-                }`}
-              />
-              <span
-                className={`block absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
-                  isMenuOpen ? "-rotate-45" : "translate-y-1.5"
-                }`}
-              />
+          <div className="flex items-center gap-4">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`${isActive(item.path)} 
+                    relative transition-all duration-200 text-sm
+                    group py-1`}
+                >
+                  <span>{item.label}</span>
+                  <div
+                    className={`absolute bottom-0 left-0 h-[2px] bg-white transition-all duration-300
+                      ${
+                        pathname === item.path
+                          ? "w-full"
+                          : "w-0 group-hover:w-full"
+                      }`}
+                  />
+                </Link>
+              ))}
             </div>
-          </button>
+
+            {/* Social Icons */}
+            <div className="hidden md:flex items-center space-x-4 ml-4">
+              <a
+                href="https://twitter.com/fanzru"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300 hover:text-white transition-all duration-200"
+                aria-label="Twitter"
+              >
+                <FaXTwitter size={18} />
+              </a>
+              <a
+                href="https://github.com/fanzru"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300 hover:text-white transition-all duration-200"
+                aria-label="GitHub"
+              >
+                <FaGithub size={18} />
+              </a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 rounded-lg text-gray-300 hover:text-white relative z-50 transition-all duration-300"
+              aria-label="Toggle menu"
+            >
+              <div className="w-6 h-6 relative flex items-center justify-center">
+                <span
+                  className={`block absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "rotate-45" : "-translate-y-1.5"
+                  }`}
+                />
+                <span
+                  className={`block absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`block absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "-rotate-45" : "translate-y-1.5"
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation Overlay */}
@@ -140,6 +167,28 @@ const Navigation = () => {
                   />
                 </div>
               ))}
+
+              {/* Social Icons in Mobile Menu */}
+              <div className="flex items-center space-x-6 mt-8">
+                <a
+                  href="https://twitter.com/fanzru"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-all duration-200"
+                  aria-label="Twitter"
+                >
+                  <FaXTwitter size={20} />
+                </a>
+                <a
+                  href="https://github.com/fanzru"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-all duration-200"
+                  aria-label="GitHub"
+                >
+                  <FaGithub size={20} />
+                </a>
+              </div>
             </div>
           </nav>
         </div>

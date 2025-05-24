@@ -1,16 +1,31 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import ClientLayoutShell from "./components/ClientLayoutShell";
 
-const geist = Geist({
+// Load Inter font
+const inter = Inter({
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+// Load Playfair Display font
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
 });
 
 export const metadata: Metadata = {
-  title: "Fanzru | Personal Website",
+  title: "Fanzru - Full Stack Developer & Blockchain Engineer",
   description:
-    "Personal website and portfolio showcasing my journey in tech and web3",
+    "Full Stack Developer with a passion for building scalable and efficient web applications.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -21,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geist.className} bg-[#0B1120] text-white min-h-screen flex flex-col overflow-x-hidden scrollbar-gutter-stable`}
+        className={`${inter.variable} ${playfair.variable} font-sans bg-[#0B1120] text-white min-h-screen flex flex-col overflow-x-hidden scrollbar-gutter-stable`}
         style={{ scrollbarGutter: "stable" }}
       >
         <ClientLayoutShell>{children}</ClientLayoutShell>

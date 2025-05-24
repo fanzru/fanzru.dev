@@ -23,6 +23,30 @@ body {
   padding-right: 0 !important; /* Prevent layout shift when modal opens */
 }
 
+/* Typography styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-mono);
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+p {
+  font-family: var(--font-inter);
+}
+
 /* Enable text selection and pointer events globally */
 * {
   user-select: text !important;
@@ -66,6 +90,7 @@ div[data-three] {
 .prose {
   max-width: 100ch;
   color: rgb(var(--foreground-rgb));
+  font-family: var(--font-inter);
 }
 
 .prose h1,
@@ -77,12 +102,14 @@ div[data-three] {
   color: white;
   margin-top: 2em;
   margin-bottom: 1em;
+  font-family: var(--font-playfair);
 }
 
 .prose p {
   margin-top: 1.5em;
   margin-bottom: 1.5em;
   line-height: 1.8;
+  font-family: var(--font-inter);
 }
 
 .prose a {
@@ -134,6 +161,7 @@ div[data-three] {
   margin: 1.5em 0;
   font-style: italic;
   color: #9ca3af;
+  font-family: var(--font-playfair);
 }
 
 /* Custom scrollbar */

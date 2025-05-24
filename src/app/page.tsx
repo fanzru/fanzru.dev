@@ -1,23 +1,40 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import PageContainer from "./components/PageContainer";
-import ThreeScene from "./components/ThreeScene";
-import SkillCard from "./components/SkillCard";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+  SiGo,
+  SiKubernetes,
+  SiDocker,
+  SiWeb3Dotjs,
+  SiSolana,
+  SiEthereum,
+  SiNodedotjs,
+  SiPostgresql,
+  SiRust,
+  SiSolidity,
+} from "react-icons/si";
 import {
   FaCode,
+  FaLayerGroup,
+  FaHandSparkles,
   FaServer,
   FaDatabase,
-  FaCloud,
-  FaEthereum,
 } from "react-icons/fa";
-import { SiSolana, SiWeb3Dotjs, SiSmartthings } from "react-icons/si";
+import { CgCode } from "react-icons/cg";
+import { HiOutlineChartSquareBar } from "react-icons/hi";
+import { BsHandIndex } from "react-icons/bs";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const contactRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -32,16 +49,9 @@ export default function Home() {
     }
   }, [copied]);
 
-  const skills = [
-    "Web3 Development",
-    "Blockchain",
-    "Smart Contracts",
-    "dApp Architecture",
-    "Frontend Development",
-    "Backend Development",
-    "Web Development",
-    "System Design",
-  ];
+  const scrollToContact = () => {
+    contactRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const container = {
     hidden: { opacity: 0 },
@@ -63,6 +73,52 @@ export default function Home() {
     },
   };
 
+  const techStack = [
+    { icon: <SiTypescript className="text-[#3178c6]" />, name: "TypeScript" },
+    { icon: <SiNextdotjs className="text-white" />, name: "Next.js" },
+    { icon: <SiTailwindcss className="text-[#38bdf8]" />, name: "Tailwind" },
+    { icon: <SiNodedotjs className="text-[#68a063]" />, name: "Node.js" },
+    { icon: <SiGo className="text-[#00ADD8]" />, name: "Go" },
+    { icon: <SiRust className="text-[#000000]" />, name: "Rust" },
+    { icon: <SiSolidity className="text-[#363636]" />, name: "Solidity" },
+    { icon: <SiDocker className="text-[#2496ED]" />, name: "Docker" },
+    { icon: <SiKubernetes className="text-[#326CE5]" />, name: "Kubernetes" },
+    { icon: <SiSolana className="text-[#9945FF]" />, name: "Solana" },
+    { icon: <SiPostgresql className="text-[#31648C]" />, name: "PostgreSQL" },
+  ];
+
+  const skills = [
+    "Web3 Development",
+    "Blockchain",
+    "Smart Contracts",
+    "dApp Architecture",
+    "Frontend Development",
+    "Backend Development",
+    "System Design",
+    "API Development",
+  ];
+
+  const web3Points = [
+    {
+      icon: <CgCode className="w-6 h-6 text-[#9333EA]" />,
+      title: "Functional & Beautiful",
+      description:
+        "Delivering elegant interfaces powered by robust and scalable logic.",
+    },
+    {
+      icon: <HiOutlineChartSquareBar className="w-6 h-6 text-[#9333EA]" />,
+      title: "Detail Obsessed",
+      description:
+        "From smart contract structure to UI padding — everything matters.",
+    },
+    {
+      icon: <BsHandIndex className="w-6 h-6 text-[#9333EA]" />,
+      title: "Clean & Efficient Code",
+      description:
+        "Prioritizing maintainable, gas-optimized, and high-performance codebases.",
+    },
+  ];
+
   // Copy email function
   const copyEmail = () => {
     navigator.clipboard.writeText("fanzru.work@gmail.com");
@@ -81,228 +137,321 @@ export default function Home() {
           >
             <PageContainer>
               {/* Hero Section */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="relative"
-              >
-                <div
-                  className="absolute inset-0 flex items-center"
-                  aria-hidden="true"
-                >
-                  <div className="w-full border-t border-gray-800"></div>
-                </div>
-                <div className="relative flex justify-start">
-                  <motion.span
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.4, type: "spring" }}
-                    className="pr-3 bg-[#0B1120] text-sm text-[#9333EA]"
-                  >
-                    INNOVATING WITH WEB3
-                  </motion.span>
-                </div>
-              </motion.div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-8">
-                <motion.div
-                  className="relative z-10"
-                  initial={{ x: -50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
-                >
-                  <motion.h1
-                    className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.6, type: "spring" }}
-                  >
-                    Building the Future with
-                    <motion.span
-                      className="block text-[#9333EA]"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.8 }}
-                    >
-                      Web3 Technology
-                    </motion.span>
-                  </motion.h1>
-
-                  <motion.p
-                    className="mt-6 text-lg lg:text-xl text-gray-400 max-w-2xl"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.0 }}
-                  >
-                    Fullstack Engineer specialized in Web3 development, Solana
-                    ecosystem, and creating decentralized applications with
-                    elegant, performant code.
-                  </motion.p>
-
+              <div className="min-h-[80vh] flex flex-col justify-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-20">
                   <motion.div
-                    className="mt-8 flex flex-col sm:flex-row gap-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <motion.p
+                      className="text-2xl mb-2"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      hi!{" "}
+                      <span className="inline-block ml-1 transform rotate-12">
+                        👋
+                      </span>
+                    </motion.p>
+                    <motion.h1
+                      className="text-6xl md:text-7xl font-bold mb-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      I'm <span className="text-[#9333EA]">Ananda Affan</span>,
+                    </motion.h1>
+                    <motion.p
+                      className="text-xl text-gray-300 mb-6"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      a <span className="font-medium">fullstack developer</span>{" "}
+                      bridging <span className="text-[#9333EA]">Web2</span> &{" "}
+                      <span className="text-[#9333EA]">Web3</span> with
+                      <br />
+                      intuitive, clean and modern design approach.
+                    </motion.p>
+
+                    <motion.div
+                      className="flex gap-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <motion.button
+                        onClick={scrollToContact}
+                        className="px-6 py-3 bg-[#9333EA] text-white rounded-lg hover:bg-[#7e22ce] transition-colors"
+                        whileHover={{ y: -3 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Get in Touch
+                      </motion.button>
+                      <motion.a
+                        href="/story"
+                        className="px-6 py-3 border border-gray-600 text-white rounded-lg hover:border-[#9333EA] transition-colors flex items-center gap-2"
+                        whileHover={{ y: -3 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                          />
+                        </svg>
+                        My Story
+                      </motion.a>
+                    </motion.div>
+                  </motion.div>
+
+                  {/* 3D Web3 Animated Element */}
+                  <motion.div
+                    className="relative w-full h-full min-h-[300px]"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative w-full h-full max-w-[400px] max-h-[400px]">
+                        {/* Web3 animated background effect */}
+                        <motion.div
+                          className="absolute inset-0 rounded-full bg-[#9333EA]/20 blur-3xl"
+                          animate={{
+                            scale: [1, 1.1, 1],
+                            opacity: [0.5, 0.8, 0.5],
+                          }}
+                          transition={{
+                            duration: 5,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                          }}
+                        />
+
+                        {/* Floating tech icons */}
+                        <motion.div
+                          className="absolute top-1/4 left-1/4 text-3xl text-[#61dafb]"
+                          animate={{
+                            y: [0, -15, 0],
+                            rotate: [0, 10, 0],
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                          }}
+                        >
+                          <SiReact />
+                        </motion.div>
+
+                        <motion.div
+                          className="absolute top-1/3 right-1/4 text-3xl text-[#9945FF]"
+                          animate={{
+                            y: [0, 15, 0],
+                            rotate: [0, -10, 0],
+                          }}
+                          transition={{
+                            duration: 3.5,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            delay: 0.5,
+                          }}
+                        >
+                          <SiSolana />
+                        </motion.div>
+
+                        <motion.div
+                          className="absolute bottom-1/3 right-1/3 text-3xl text-[#627EEA]"
+                          animate={{
+                            y: [0, -10, 0],
+                            x: [0, 10, 0],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            delay: 1,
+                          }}
+                        >
+                          <SiEthereum />
+                        </motion.div>
+
+                        <motion.div
+                          className="absolute bottom-1/4 left-1/3 text-3xl text-white"
+                          animate={{
+                            y: [0, 10, 0],
+                            x: [0, -10, 0],
+                          }}
+                          transition={{
+                            duration: 4.5,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            delay: 1.5,
+                          }}
+                        >
+                          <SiWeb3Dotjs />
+                        </motion.div>
+
+                        {/* Central code block */}
+                        <motion.div
+                          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl bg-[#0B1120]/80 border border-[#9333EA]/30 shadow-lg shadow-[#9333EA]/20 backdrop-blur-sm"
+                          animate={{
+                            rotateY: [0, 360],
+                          }}
+                          transition={{
+                            duration: 15,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        >
+                          <pre className="text-xs text-[#61dafb] font-mono">
+                            <code>{"<Web3 />"}</code>
+                          </pre>
+                        </motion.div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Tech Stack Section */}
+                <motion.div
+                  className="mb-24"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <motion.p className="text-gray-400 mb-4">
+                    current favorite tech stack/tools:
+                  </motion.p>
+                  <motion.div
+                    className="flex flex-wrap gap-4"
                     variants={container}
                     initial="hidden"
                     animate="show"
                   >
-                    <motion.a
-                      variants={item}
-                      href="/projects"
-                      className="px-6 py-3 bg-gradient-to-r from-[#9333EA] to-[#7928CA] text-white text-center rounded-lg hover:from-[#7928CA] hover:to-[#9333EA] transition-all duration-300 transform hover:scale-105"
-                      whileHover={{ y: -3 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      View Projects
-                    </motion.a>
-                    <motion.a
-                      variants={item}
-                      href="/blog"
-                      className="px-6 py-3 border border-[#9333EA] text-white text-center rounded-lg hover:bg-[#9333EA]/10 transition-all duration-300 transform hover:scale-105"
-                      whileHover={{ y: -3 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      Read Blog
-                    </motion.a>
+                    {techStack.map((tech, index) => (
+                      <motion.div
+                        key={tech.name}
+                        variants={item}
+                        className="flex items-center gap-2 bg-gray-900/50 px-3 py-2 rounded-md border border-gray-800"
+                        whileHover={{
+                          y: -3,
+                          borderColor: "#9333EA",
+                          transition: { duration: 0.2 },
+                        }}
+                      >
+                        <span className="text-xl">{tech.icon}</span>
+                        <span className="text-sm text-gray-300">
+                          {tech.name}
+                        </span>
+                      </motion.div>
+                    ))}
                   </motion.div>
-                </motion.div>
-                <motion.div
-                  className="relative w-full h-full min-h-[400px] flex items-center justify-center overflow-hidden bg-transparent"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.7, type: "spring", stiffness: 100 }}
-                  style={{ isolation: "isolate" }}
-                >
-                  <ThreeScene />
                 </motion.div>
               </div>
 
-              {/* Web3 Stats Section */}
+              {/* Web3 Points Section */}
               <motion.div
-                className="mt-20 py-8 px-6 bg-gray-900/30 rounded-xl border border-gray-800"
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2, type: "spring" }}
-              >
-                <h3 className="text-xl font-medium text-white mb-6 flex items-center">
-                  <SiSolana className="mr-2 text-[#9333EA]" /> Web3 Journey
-                  Starting
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-white">Learn</div>
-                    <p className="text-gray-400">Exploring Web3 fundamentals</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-white">Build</div>
-                    <p className="text-gray-400">Creating my first dApps</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-white">Grow</div>
-                    <p className="text-gray-400">Joining the Web3 community</p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Featured Cards */}
-              <motion.div
-                className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-6"
+                className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24"
                 variants={container}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true }}
               >
-                {/* Card 1 */}
-                <motion.div
-                  variants={item}
-                  className="group p-6 bg-[#0B1120] rounded-lg border border-gray-800 hover:border-[#9333EA] transition-colors"
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="p-2 bg-[#9333EA]/10 rounded-lg">
-                      <SiWeb3Dotjs className="w-5 h-5 text-[#9333EA]" />
+                {web3Points.map((point, index) => (
+                  <motion.div
+                    key={index}
+                    variants={item}
+                    className="flex flex-col items-center text-center p-6 border-collapse "
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  >
+                    <div className="p-3 rounded-full bg-[#241b2d] mb-4 w-12 h-12 flex items-center justify-center">
+                      {point.icon}
                     </div>
-                    <h3 className="text-lg font-medium text-white">
-                      Web3 Development
+                    <h3 className="text-xl font-medium text-white mb-2">
+                      {point.title}
                     </h3>
-                  </div>
-                  <p className="text-gray-400">
-                    Building decentralized applications on Solana and Ethereum
-                    with smart contracts and blockchain integration.
-                  </p>
-                </motion.div>
+                    <p className="text-gray-400 max-w-md">
+                      {point.description}
+                    </p>
+                  </motion.div>
+                ))}
+              </motion.div>
 
-                {/* Card 2 */}
-                <motion.div
-                  variants={item}
-                  className="group p-6 bg-[#0B1120] rounded-lg border border-gray-800 hover:border-[#9333EA] transition-colors"
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              {/* Motivational Quote Section */}
+              <motion.div
+                className="py-28 text-center relative mb-28"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 opacity-20 text-9xl font-bold text-gray-700">
+                  "
+                </div>
+                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 opacity-20 text-9xl font-bold text-gray-700">
+                  "
+                </div>
+                <motion.h2
+                  className="text-4xl md:text-5xl font-bold mb-6 leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  viewport={{ once: true }}
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="p-2 bg-[#9333EA]/10 rounded-lg">
-                      <FaServer className="w-5 h-5 text-[#9333EA]" />
-                    </div>
-                    <h3 className="text-lg font-medium text-white">
-                      Fullstack Engineering
-                    </h3>
+                  It's not just how it{" "}
+                  <span className="text-[#9333EA]">looks</span>,
+                  <div className="flex items-center justify-center gap-4 my-2">
+                    <span className="h-0.5 w-16 bg-gray-700"></span>
+                    it's how it <span className="text-white">works</span>
+                    <span className="h-0.5 w-16 bg-gray-700"></span>
                   </div>
-                  <p className="text-gray-400">
-                    Developing complete solutions from front to back, with
-                    React, Next.js, Node.js, and Python for performant
-                    applications.
-                  </p>
-                </motion.div>
-
-                {/* Card 3 */}
-                <motion.div
-                  variants={item}
-                  className="group p-6 bg-[#0B1120] rounded-lg border border-gray-800 hover:border-[#9333EA] transition-colors"
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="p-2 bg-[#9333EA]/10 rounded-lg">
-                      <SiSolana className="w-5 h-5 text-[#9333EA]" />
-                    </div>
-                    <h3 className="text-lg font-medium text-white">
-                      Solana Ecosystem
-                    </h3>
-                  </div>
-                  <p className="text-gray-400">
-                    Specialized in Solana blockchain development, building
-                    high-performance dApps and NFT projects with Rust and
-                    JavaScript.
-                  </p>
-                </motion.div>
-
-                {/* Card 4 */}
-                <motion.div
-                  variants={item}
-                  className="group p-6 bg-[#0B1120] rounded-lg border border-gray-800 hover:border-[#9333EA] transition-colors"
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="p-2 bg-[#9333EA]/10 rounded-lg">
-                      <SiSmartthings className="w-5 h-5 text-[#9333EA]" />
-                    </div>
-                    <h3 className="text-lg font-medium text-white">
-                      Smart Contract Development
-                    </h3>
-                  </div>
-                  <p className="text-gray-400">
-                    Writing secure and optimized smart contracts for
-                    decentralized applications and token systems.
-                  </p>
-                </motion.div>
+                  — <span className="text-[#9333EA]">inside</span> and{" "}
+                  <span className="text-white">out</span>.
+                </motion.h2>
               </motion.div>
 
               {/* Skills Section */}
               <motion.div
-                className="mt-24"
+                className="mb-24"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
+                <motion.div
+                  className="relative mb-8"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-800"></div>
+                  </div>
+                  <div className="relative flex justify-start">
+                    <motion.span
+                      initial={{ x: -20, opacity: 0 }}
+                      whileInView={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                      viewport={{ once: true }}
+                      className="pr-3 bg-[#0B1120] text-sm text-[#9333EA]"
+                    >
+                      EXPERTISE
+                    </motion.span>
+                  </div>
+                </motion.div>
+
                 <motion.h2
                   className="text-3xl font-bold text-white mb-8"
                   initial={{ opacity: 0, x: -20 }}
@@ -312,7 +461,8 @@ export default function Home() {
                 >
                   Skills & Technologies
                 </motion.h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                   {skills.map((skill, index) => (
                     <motion.div
                       key={skill}
@@ -320,8 +470,10 @@ export default function Home() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                       viewport={{ once: true }}
+                      whileHover={{ scale: 1.05 }}
+                      className="p-4 bg-gray-900/30 rounded-lg border border-gray-800 hover:border-[#9333EA] transition-colors"
                     >
-                      <SkillCard skill={skill} />
+                      <p className="text-white font-medium">{skill}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -329,33 +481,37 @@ export default function Home() {
 
               {/* Contact Section */}
               <motion.div
-                className="mt-32 mb-24"
+                ref={contactRef}
+                className="mb-24"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <div className="relative">
-                  <div
-                    className="absolute inset-0 flex items-center"
-                    aria-hidden="true"
-                  >
+                <motion.div
+                  className="relative mb-8"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-800"></div>
                   </div>
                   <div className="relative flex justify-start">
                     <motion.span
                       initial={{ x: -20, opacity: 0 }}
                       whileInView={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.2, type: "spring" }}
+                      transition={{ delay: 0.2 }}
                       viewport={{ once: true }}
                       className="pr-3 bg-[#0B1120] text-sm text-[#9333EA]"
                     >
                       LET'S COLLABORATE
                     </motion.span>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="mt-12 flex flex-col items-center text-center">
+                <div className="flex flex-col items-center text-center">
                   <motion.h2
                     className="text-4xl md:text-5xl font-bold text-white max-w-3xl"
                     initial={{ opacity: 0, y: 20 }}
@@ -458,8 +614,6 @@ export default function Home() {
                       <motion.a
                         href={`mailto:fanzru.work@gmail.com?subject=${encodeURIComponent(
                           "Collaboration Opportunity"
-                        )}&body=${encodeURIComponent(
-                          "Hi Fanzru,\n\nI came across your portfolio and I'm interested in collaborating on a project. Here are some details about what I have in mind:\n\n- Project Type: [Web3/Fullstack/Other]\n- Timeline: [Your timeline]\n- Budget: [Your budget, if applicable]\n\nLooking forward to discussing this opportunity further.\n\nBest regards,\n[Your Name]"
                         )}`}
                         className="flex-1 py-3 bg-gradient-to-r from-[#9333EA] to-[#7928CA] text-white text-center rounded-lg hover:from-[#7928CA] hover:to-[#9333EA] transition-all duration-300"
                         whileHover={{ y: -2 }}
