@@ -44,6 +44,24 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+/* Ensure Three.js canvas is transparent */
+canvas {
+  background: transparent !important;
+}
+
+/* Force transparent background on Three.js containers */
+div[data-three] {
+  background: transparent !important;
+  isolation: isolate;
+}
+
+/* Remove any white background from Three.js */
+.three-root,
+.three-container,
+.r3f-canvas {
+  background: transparent !important;
+}
+
 /* Prose styles for MDX content */
 .prose {
   max-width: 100ch;

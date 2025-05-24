@@ -2,10 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { SiSolana, SiWeb3Dotjs } from "react-icons/si";
 
 export default function LoadingScreen({ show }: { show: boolean }) {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [dots, setDots] = useState<
+    Array<{
+      id: number;
+      x: number;
+      y: number;
+      size: number;
+      duration: number;
+    }>
+  >([]);
+
+  // Generate consistent dot data when component mounts
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const newDots = Array.from({ length: 20 }).map((_, i) => ({
+        id: i,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 10 + 5, // 5px to 15px
+        duration: Math.random() * 5 + 15, // 15s to 20s
+      }));
+      setDots(newDots);
+    }
+  }, []);
 
   // Animation effect - sync with parent component's timeout
   useEffect(() => {
@@ -49,7 +73,7 @@ export default function LoadingScreen({ show }: { show: boolean }) {
     };
   }, [show]);
 
-  const displayText = "hi there!, i'm fanzru";
+  const displayText = "hi there, i'm fanzru";
 
   // Calculate optimal parameters based on text length
   const textLength = displayText.length;
@@ -62,26 +86,67 @@ export default function LoadingScreen({ show }: { show: boolean }) {
     <AnimatePresence mode="wait">
       {show && (
         <motion.div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0B1120]"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0B1120]"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
+          {/* Animated dots background */}
+          <div className="absolute inset-0 overflow-hidden">
+            {dots.map((dot) => (
+              <motion.div
+                key={dot.id}
+                className="absolute rounded-full bg-[#9333EA]/20"
+                initial={{
+                  x: dot.x,
+                  y: dot.y,
+                  width: dot.size,
+                  height: dot.size,
+                }}
+                animate={{
+                  x: [dot.x, dot.x + (Math.random() * 200 - 100)],
+                  y: [dot.y, dot.y + (Math.random() * 200 - 100)],
+                }}
+                transition={{
+                  duration: dot.duration,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Logo animation */}
+          <motion.div
+            className="mb-12 text-[#14F195] flex items-center justify-center"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{
+              duration: 0.8,
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+            }}
+          >
+            <SiSolana size={60} className="text-[#14F195]" />
+          </motion.div>
+
           <motion.div
             className="flex flex-col items-center"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
           >
-            <div className="text-[40px] sm:text-[60px] font-bold tracking-tight text-center relative">
+            <div className="text-[28px] sm:text-[40px] md:text-[50px] font-bold tracking-tight text-center relative">
               <div className="overflow-hidden">
                 {/* Static outline text */}
                 <div
                   className="relative"
                   style={{
                     color: "transparent",
-                    WebkitTextStroke: "1px white",
+                    WebkitTextStroke: "1px rgba(147, 51, 234, 0.5)",
                     fontFamily: "sans-serif",
                   }}
                 >
@@ -111,7 +176,7 @@ export default function LoadingScreen({ show }: { show: boolean }) {
                         {/* Character with clip-path for wave effect */}
                         <div
                           style={{
-                            color: "white",
+                            color: "#9333EA",
                             fontFamily: "sans-serif",
                             clipPath: `polygon(0 ${100 - fillPercent}%, 100% ${
                               100 - fillPercent - waveAngle
@@ -128,13 +193,28 @@ export default function LoadingScreen({ show }: { show: boolean }) {
               </div>
             </div>
 
-            {/* Loading indicator with smoother transition */}
+            {/* Loading indicator with progress bar */}
             <motion.div
-              className="mt-4 text-white/60"
-              animate={{ opacity: isComplete ? 0 : 1 }}
-              transition={{ duration: 0.3 }}
+              className="mt-10 relative w-[280px] sm:w-[320px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
             >
-              loading... {Math.round(progress * 100)}%
+              <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-[#9333EA] to-[#14F195]"
+                  style={{ width: `${progress * 100}%` }}
+                />
+              </div>
+              <div className="mt-3 flex justify-between text-sm text-gray-500">
+                <div className="flex items-center">
+                  <SiWeb3Dotjs className="mr-2 text-[#9333EA]" />
+                  <span className="text-white/60">Loading experience</span>
+                </div>
+                <div className="text-white/60">
+                  {Math.round(progress * 100)}%
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </motion.div>

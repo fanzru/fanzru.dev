@@ -1,19 +1,52 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import PageContainer from "../components/PageContainer";
 
 export default function Story() {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [visibleExperiences, setVisibleExperiences] = useState<number[]>([]);
+
+  useEffect(() => {
+    setIsLoaded(true);
+
+    // Initialize with the first experience visible
+    setVisibleExperiences([0]);
+
+    // Gradually reveal experiences as user scrolls
+    const handleScroll = () => {
+      const experienceElements = document.querySelectorAll(".experience-item");
+      experienceElements.forEach((el, index) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          setVisibleExperiences((prev) =>
+            prev.includes(index) ? prev : [...prev, index]
+          );
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const experiences = [
     {
       year: "2024",
-      title: "Product Engineering Manager 🔥",
+      title: "Product Engineering Lead 🔥",
       company: "Astabyte",
       period: "Jan 2024 - Present",
       description:
         "Leading technology and product development while managing cross-functional teams.",
       achievements: [
-        "Meeting and gathering requirements with clients like Telkom University, Telkom Indonesia, Puri Group",
+        "Leading the development of a new product from scratch, from ideation to launch",
         "Managing growth together with Product Manager, Designer, Engineer teams",
+        "Successfully delivered enterprise-level projects for notable clients",
+        "Developed a new product from scratch, from ideation to launch",
+        "Managed growth together with Product Manager, Designer, Engineer teams",
         "Successfully delivered enterprise-level projects for notable clients",
       ],
       technologies: [
@@ -252,107 +285,349 @@ export default function Story() {
     },
   ];
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    show: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 70, damping: 20 },
+    },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 20,
+      },
+    },
+    exit: { opacity: 0, y: -20 },
+  };
+
+  // Add this new function to check if an experience is current
+  const isCurrentExperience = (period: string): boolean => {
+    return period.toLowerCase().includes("present");
+  };
+
   return (
     <>
       <Navigation />
-      <PageContainer>
-        <div className="relative">
-          <div
-            className="absolute inset-0 flex items-center"
-            aria-hidden="true"
+      <AnimatePresence>
+        {isLoaded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="w-full border-t border-gray-800"></div>
-          </div>
-          <div className="relative flex justify-start">
-            <span className="pr-3 bg-[#0B1120] text-sm text-[#9333EA]">
-              STORY
-            </span>
-          </div>
-        </div>
+            <PageContainer>
+              <div className="relative">
+                <div
+                  className="absolute inset-0 flex items-center"
+                  aria-hidden="true"
+                >
+                  <div className="w-full border-t border-gray-800"></div>
+                </div>
+                <div className="relative flex justify-start">
+                  <motion.span
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2, type: "spring" }}
+                    className="pr-3 bg-[#0B1120] text-sm text-[#9333EA] select-text"
+                  >
+                    STORY
+                  </motion.span>
+                </div>
+              </div>
 
-        <h1 className="mt-8 text-4xl font-bold text-white">My Journey</h1>
-        <p className="mt-4 text-xl text-gray-400">
-          A chronicle of my professional evolution through technology,
-          innovation, and leadership.
-        </p>
+              <motion.h1
+                className="mt-8 text-4xl font-bold text-white select-text"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                My Journey
+              </motion.h1>
+              <motion.p
+                className="mt-4 text-xl text-gray-400 select-text"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+              >
+                A chronicle of my professional evolution through technology,
+                innovation, and leadership.
+              </motion.p>
 
-        <div className="mt-12">
-          <div className="relative">
-            {/* Timeline line */}
-            <div
-              className="absolute top-0 left-8 h-full w-px bg-gray-800"
-              aria-hidden="true"
-            ></div>
+              <motion.div
+                className="mt-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <div className="relative">
+                  {/* Timeline line */}
+                  <motion.div
+                    className="absolute top-0 left-8 h-full w-px bg-gray-800"
+                    initial={{ height: 0 }}
+                    animate={{ height: "100%" }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    aria-hidden="true"
+                  ></motion.div>
 
-            <div className="space-y-16">
-              {experiences.map((experience, index) => (
-                <div key={index} className="relative">
-                  {/* Timeline dot */}
-                  <div className="absolute left-8 -ml-[9px] h-[18px] w-[18px] rounded-full border-2 border-[#9333EA] bg-[#0B1120]"></div>
+                  <div className="space-y-16">
+                    {experiences.map((experience, index) => (
+                      <motion.div
+                        key={index}
+                        className="relative experience-item"
+                        initial="hidden"
+                        animate={
+                          visibleExperiences.includes(index)
+                            ? "visible"
+                            : "hidden"
+                        }
+                        variants={fadeIn}
+                        custom={index}
+                      >
+                        {/* Timeline dot */}
+                        <motion.div
+                          className={`absolute left-8 -ml-[9px] h-[18px] w-[18px] rounded-full border-2 ${
+                            isCurrentExperience(experience.period)
+                              ? "border-[#9333EA]"
+                              : "border-[#9333EA]"
+                          } bg-[#0B1120]`}
+                          initial={{ scale: 0 }}
+                          animate={
+                            isCurrentExperience(experience.period)
+                              ? {
+                                  scale: [1, 1.2, 1],
+                                  boxShadow: [
+                                    "0 0 0px rgba(147, 51, 234, 0)",
+                                    "0 0 15px rgba(147, 51, 234, 0.7)",
+                                    "0 0 5px rgba(147, 51, 234, 0.3)",
+                                  ],
+                                }
+                              : { scale: 1 }
+                          }
+                          transition={
+                            isCurrentExperience(experience.period)
+                              ? {
+                                  repeat: Infinity,
+                                  repeatType: "loop",
+                                  duration: 3,
+                                  ease: "easeInOut",
+                                }
+                              : {
+                                  delay: 0.2 + index * 0.1,
+                                  type: "spring",
+                                  stiffness: 300,
+                                  damping: 20,
+                                }
+                          }
+                          whileHover={{
+                            scale: 1.2,
+                            boxShadow: "0 0 15px rgba(147, 51, 234, 0.5)",
+                          }}
+                        ></motion.div>
 
-                  <div className="ml-24">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-[#9333EA] font-mono">
-                        {experience.year}
-                      </span>
-                      <span className="text-sm text-gray-500 font-mono">
-                        {experience.period}
-                      </span>
-                      <div className="h-px flex-1 bg-gray-800"></div>
-                    </div>
-
-                    <div className="mt-6 bg-gray-900/50 p-6 rounded-lg border border-gray-800 hover:border-[#9333EA] transition-colors duration-300">
-                      <h3 className="text-xl font-semibold text-white">
-                        {experience.title}
-                      </h3>
-                      <p className="mt-1 text-[#9333EA]">
-                        {experience.company}
-                      </p>
-                      <p className="mt-4 text-gray-400">
-                        {experience.description}
-                      </p>
-
-                      {/* Achievements */}
-                      <div className="mt-6">
-                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-3">
-                          Key Achievements
-                        </h4>
-                        <ul className="space-y-2">
-                          {experience.achievements.map((achievement, i) => (
-                            <li key={i} className="flex items-start">
-                              <span className="text-[#9333EA] mr-2">•</span>
-                              <span className="text-gray-400">
-                                {achievement}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Technologies */}
-                      <div className="mt-6">
-                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-3">
-                          Technologies
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {experience.technologies.map((tech, i) => (
-                            <span
-                              key={i}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#9333EA]/10 text-[#9333EA] hover:bg-[#9333EA]/20 transition-colors duration-300"
+                        <motion.div
+                          className="ml-24"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.3 + index * 0.1 }}
+                        >
+                          <motion.div
+                            className="flex items-center space-x-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.4 + index * 0.1 }}
+                          >
+                            <motion.span
+                              className="text-sm text-[#9333EA] font-mono select-text"
+                              whileHover={{ scale: 1.05 }}
                             >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                              {experience.year}
+                            </motion.span>
+                            <motion.span
+                              className="text-sm text-gray-500 font-mono select-text"
+                              whileHover={{ scale: 1.05 }}
+                            >
+                              {experience.period}
+                            </motion.span>
+                            <motion.div
+                              className="h-px flex-1 bg-gray-800"
+                              initial={{ scaleX: 0 }}
+                              animate={{ scaleX: 1 }}
+                              transition={{
+                                delay: 0.5 + index * 0.1,
+                                duration: 0.5,
+                              }}
+                            ></motion.div>
+                          </motion.div>
+
+                          <motion.div
+                            className="mt-6 bg-gray-900/50 p-6 rounded-lg border border-gray-800 group"
+                            whileHover={{
+                              borderColor: "#9333EA",
+                              boxShadow:
+                                "0 10px 30px -15px rgba(147, 51, 234, 0.3)",
+                              y: -5,
+                              transition: { duration: 0.2 },
+                            }}
+                          >
+                            <motion.h3
+                              className="text-xl font-semibold text-white group-hover:text-[#9333EA] transition-colors select-text"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.6 + index * 0.1 }}
+                            >
+                              {experience.title}
+                            </motion.h3>
+                            <motion.p
+                              className={`mt-1 ${
+                                isCurrentExperience(experience.period)
+                                  ? "flex items-center"
+                                  : ""
+                              } text-[#9333EA] select-text`}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.7 + index * 0.1 }}
+                            >
+                              {experience.company}
+                              {isCurrentExperience(experience.period) && (
+                                <motion.span
+                                  className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#9333EA] text-white"
+                                  initial={{ opacity: 0 }}
+                                  animate={{
+                                    opacity: [0.7, 1, 0.7],
+                                    scale: [1, 1.05, 1],
+                                  }}
+                                  transition={{
+                                    repeat: Infinity,
+                                    repeatType: "loop",
+                                    duration: 2,
+                                    ease: "easeInOut",
+                                  }}
+                                >
+                                  CURRENT
+                                </motion.span>
+                              )}
+                            </motion.p>
+                            <motion.p
+                              className={`mt-4 text-gray-400 select-text ${
+                                isCurrentExperience(experience.period)
+                                  ? "font-medium"
+                                  : ""
+                              }`}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.8 + index * 0.1 }}
+                            >
+                              {experience.description}
+                            </motion.p>
+
+                            {/* Achievements */}
+                            <motion.div
+                              className="mt-6"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.9 + index * 0.1 }}
+                            >
+                              <motion.h4
+                                className="text-sm font-semibold text-white uppercase tracking-wider mb-3 select-text"
+                                whileHover={{ color: "#9333EA" }}
+                              >
+                                Key Achievements
+                              </motion.h4>
+                              <motion.ul
+                                className="space-y-2"
+                                variants={container}
+                                initial="hidden"
+                                animate="show"
+                              >
+                                {experience.achievements.map(
+                                  (achievement, i) => (
+                                    <motion.li
+                                      key={i}
+                                      className="flex items-start"
+                                      variants={item}
+                                      whileHover={{
+                                        x: 4,
+                                        transition: { duration: 0.2 },
+                                      }}
+                                    >
+                                      <span className="text-[#9333EA] mr-2">
+                                        •
+                                      </span>
+                                      <span className="text-gray-400 select-text">
+                                        {achievement}
+                                      </span>
+                                    </motion.li>
+                                  )
+                                )}
+                              </motion.ul>
+                            </motion.div>
+
+                            {/* Technologies */}
+                            <motion.div
+                              className="mt-6"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 1.0 + index * 0.1 }}
+                            >
+                              <motion.h4
+                                className="text-sm font-semibold text-white uppercase tracking-wider mb-3 select-text"
+                                whileHover={{ color: "#9333EA" }}
+                              >
+                                Technologies
+                              </motion.h4>
+                              <motion.div
+                                className="flex flex-wrap gap-2"
+                                variants={container}
+                                initial="hidden"
+                                animate="show"
+                              >
+                                {experience.technologies.map((tech, i) => (
+                                  <motion.span
+                                    key={i}
+                                    variants={item}
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#9333EA]/10 text-[#9333EA] select-text"
+                                    whileHover={{
+                                      backgroundColor:
+                                        "rgba(147, 51, 234, 0.2)",
+                                      scale: 1.05,
+                                      transition: { duration: 0.2 },
+                                    }}
+                                  >
+                                    {tech}
+                                  </motion.span>
+                                ))}
+                              </motion.div>
+                            </motion.div>
+                          </motion.div>
+                        </motion.div>
+                      </motion.div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </PageContainer>
+              </motion.div>
+            </PageContainer>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <Footer />
     </>
   );

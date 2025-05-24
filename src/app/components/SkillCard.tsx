@@ -32,7 +32,15 @@ import {
   SiCloudflare,
   SiApachenetbeanside,
   SiOpenapiinitiative,
+  SiSolana,
+  SiEthereum,
+  SiWeb3Dotjs,
+  SiRust,
+  SiIpfs,
+  SiPolkadot,
+  SiSmartthings,
 } from "react-icons/si";
+import { FaCode, FaEthereum, FaLayerGroup } from "react-icons/fa";
 
 const logos = {
   "Web Development": ["react", "nextjs", "typescript", "javascript"],
@@ -43,6 +51,10 @@ const logos = {
   "Backend Development": ["nodejs", "python", "go", "java"],
   "Database Design": ["postgresql", "mongodb", "mysql", "redis"],
   "System Design": ["architecture", "microservices", "api", "cloud"],
+  "Web3 Development": ["solana", "ethereum", "web3", "ipfs"],
+  Blockchain: ["solana", "ethereum", "polkadot", "rust"],
+  "Smart Contracts": ["rust", "solidity", "contracts", "security"],
+  "dApp Architecture": ["web3", "frontend", "backend", "blockchain"],
 };
 
 // Mapping string ke icon component
@@ -76,6 +88,18 @@ const logoIcons: Record<string, React.ReactNode> = {
   microservices: <SiMicrodotblog size={28} />,
   api: <SiOpenapiinitiative size={28} />,
   cloud: <SiCloudflare size={28} />,
+  solana: <SiSolana size={28} />,
+  ethereum: <SiEthereum size={28} />,
+  web3: <SiWeb3Dotjs size={28} />,
+  ipfs: <SiIpfs size={28} />,
+  polkadot: <SiPolkadot size={28} />,
+  rust: <SiRust size={28} />,
+  solidity: <FaCode size={28} />,
+  contracts: <SiSmartthings size={28} />,
+  security: <FaLayerGroup size={28} />,
+  frontend: <SiReact size={28} />,
+  backend: <SiNodedotjs size={28} />,
+  blockchain: <FaEthereum size={28} />,
 };
 
 // Predefined positions for 4 items (most we have in any category)
