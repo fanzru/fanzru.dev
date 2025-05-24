@@ -48,6 +48,8 @@ const nextConfig = {
   experimental: {
     mdxRs: true,
   },
+  // Configuration for Docker deployment
+  output: "standalone",
 };
 
 const withMDX = createMDX({
