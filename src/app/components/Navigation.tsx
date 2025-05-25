@@ -135,7 +135,7 @@ const Navigation = () => {
           <div className="absolute inset-0 w-full bg-[#0B1120]/95 backdrop-blur-lg" />
 
           <nav className="relative flex flex-col items-center justify-center h-screen">
-            <div className="flex flex-col items-center space-y-8 w-full max-w-xs px-4">
+            <div className="flex flex-col items-center space-y-6 w-full max-w-xs px-4">
               {navItems.map((item, index) => (
                 <div
                   key={item.path}
@@ -155,21 +155,21 @@ const Navigation = () => {
                     onClick={() => setIsMenuOpen(false)}
                     className={`${isActive(
                       item.path
-                    )} text-xl font-medium inline-block relative px-4`}
+                    )} text-base sm:text-lg font-medium inline-block relative px-4`}
                   >
                     {item.label}
                   </Link>
                   <div
-                    className={`h-[1px] bg-white/70 mt-2 mx-auto transition-all duration-300
+                    className={`h-[1px] bg-white/70 mt-1.5 mx-auto transition-all duration-300
                       ${
-                        pathname === item.path ? "w-16" : "w-0 group-hover:w-16"
+                        pathname === item.path ? "w-12" : "w-0 group-hover:w-12"
                       }`}
                   />
                 </div>
               ))}
 
               {/* Social Icons in Mobile Menu */}
-              <div className="flex items-center space-x-6 mt-8">
+              <div className="flex items-center space-x-6 mt-6">
                 <a
                   href="https://twitter.com/fanzru"
                   target="_blank"
@@ -177,7 +177,7 @@ const Navigation = () => {
                   className="text-gray-300 hover:text-white transition-all duration-200"
                   aria-label="Twitter"
                 >
-                  <FaXTwitter size={20} />
+                  <FaXTwitter size={18} />
                 </a>
                 <a
                   href="https://github.com/fanzru"
@@ -186,7 +186,7 @@ const Navigation = () => {
                   className="text-gray-300 hover:text-white transition-all duration-200"
                   aria-label="GitHub"
                 >
-                  <FaGithub size={20} />
+                  <FaGithub size={18} />
                 </a>
               </div>
             </div>

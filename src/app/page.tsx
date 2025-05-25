@@ -145,7 +145,7 @@ export default function Home() {
                     transition={{ delay: 0.2 }}
                   >
                     <motion.p
-                      className="text-2xl mb-2"
+                      className="text-xl sm:text-2xl mb-2"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
@@ -156,7 +156,7 @@ export default function Home() {
                       </span>
                     </motion.p>
                     <motion.h1
-                      className="text-6xl md:text-7xl font-bold mb-4"
+                      className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
@@ -164,7 +164,7 @@ export default function Home() {
                       I'm <span className="text-[#9333EA]">Ananda Affan</span>,
                     </motion.h1>
                     <motion.p
-                      className="text-xl text-gray-300 mb-6"
+                      className="text-base sm:text-lg md:text-xl text-gray-300 mb-6"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 }}
@@ -172,19 +172,19 @@ export default function Home() {
                       a <span className="font-medium">fullstack developer</span>{" "}
                       bridging <span className="text-[#9333EA]">Web2</span> &{" "}
                       <span className="text-[#9333EA]">Web3</span> with
-                      <br />
+                      <br className="hidden sm:block" />
                       intuitive, clean and modern design approach.
                     </motion.p>
 
                     <motion.div
-                      className="flex gap-4"
+                      className="flex flex-col sm:flex-row gap-4"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 }}
                     >
                       <motion.button
                         onClick={scrollToContact}
-                        className="px-6 py-3 bg-[#9333EA] text-white rounded-lg hover:bg-[#7e22ce] transition-colors"
+                        className="px-6 py-2.5 sm:py-3 bg-[#9333EA] text-white rounded-lg hover:bg-[#7e22ce] transition-colors text-sm sm:text-base"
                         whileHover={{ y: -3 }}
                         whileTap={{ scale: 0.98 }}
                       >
@@ -192,13 +192,13 @@ export default function Home() {
                       </motion.button>
                       <motion.a
                         href="/story"
-                        className="px-6 py-3 border border-gray-600 text-white rounded-lg hover:border-[#9333EA] transition-colors flex items-center gap-2"
+                        className="px-6 py-2.5 sm:py-3 border border-gray-600 text-white rounded-lg hover:border-[#9333EA] transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
                         whileHover={{ y: -3 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="h-4 w-4 sm:h-5 sm:w-5"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -325,16 +325,16 @@ export default function Home() {
 
                 {/* Tech Stack Section */}
                 <motion.div
-                  className="mb-24"
+                  className="mb-20 sm:mb-24"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 }}
                 >
-                  <motion.p className="text-gray-400 mb-4">
+                  <motion.p className="text-sm sm:text-base text-gray-400 mb-4">
                     current favorite tech stack/tools:
                   </motion.p>
                   <motion.div
-                    className="flex flex-wrap gap-4"
+                    className="flex flex-wrap gap-3 sm:gap-4"
                     variants={container}
                     initial="hidden"
                     animate="show"
@@ -343,17 +343,15 @@ export default function Home() {
                       <motion.div
                         key={tech.name}
                         variants={item}
-                        className="flex items-center gap-2 bg-gray-900/50 px-3 py-2 rounded-md border border-gray-800"
+                        className="flex items-center gap-1.5 sm:gap-2 bg-gray-900/50 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md border border-gray-800 text-xs sm:text-sm"
                         whileHover={{
                           y: -3,
                           borderColor: "#9333EA",
                           transition: { duration: 0.2 },
                         }}
                       >
-                        <span className="text-xl">{tech.icon}</span>
-                        <span className="text-sm text-gray-300">
-                          {tech.name}
-                        </span>
+                        <span className="text-lg sm:text-xl">{tech.icon}</span>
+                        <span className="text-gray-300">{tech.name}</span>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -362,7 +360,7 @@ export default function Home() {
 
               {/* Web3 Points Section */}
               <motion.div
-                className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-20 sm:mb-24"
                 variants={container}
                 initial="hidden"
                 whileInView="show"
@@ -372,16 +370,16 @@ export default function Home() {
                   <motion.div
                     key={index}
                     variants={item}
-                    className="flex flex-col items-center text-center p-6 border-collapse "
+                    className="flex flex-col items-center text-center p-4 sm:p-6 border-collapse"
                     whileHover={{ y: -5, transition: { duration: 0.2 } }}
                   >
-                    <div className="p-3 rounded-full bg-[#241b2d] mb-4 w-12 h-12 flex items-center justify-center">
+                    <div className="p-2.5 sm:p-3 rounded-full bg-[#241b2d] mb-3 sm:mb-4 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                       {point.icon}
                     </div>
-                    <h3 className="text-xl font-medium text-white mb-2">
+                    <h3 className="text-lg sm:text-xl font-medium text-white mb-2">
                       {point.title}
                     </h3>
-                    <p className="text-gray-400 max-w-md">
+                    <p className="text-sm sm:text-base text-gray-400 max-w-md">
                       {point.description}
                     </p>
                   </motion.div>
@@ -390,20 +388,20 @@ export default function Home() {
 
               {/* Motivational Quote Section */}
               <motion.div
-                className="py-28 text-center relative mb-28"
+                className="py-20 sm:py-28 text-center relative mb-20 sm:mb-28"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 opacity-20 text-9xl font-bold text-gray-700">
+                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 opacity-20 text-7xl sm:text-9xl font-bold text-gray-700">
                   "
                 </div>
-                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 opacity-20 text-9xl font-bold text-gray-700">
+                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 opacity-20 text-7xl sm:text-9xl font-bold text-gray-700">
                   "
                 </div>
                 <motion.h2
-                  className="text-4xl md:text-5xl font-bold mb-6 leading-tight"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -411,10 +409,10 @@ export default function Home() {
                 >
                   It's not just how it{" "}
                   <span className="text-[#9333EA]">looks</span>,
-                  <div className="flex items-center justify-center gap-4 my-2">
-                    <span className="h-0.5 w-16 bg-gray-700"></span>
+                  <div className="flex items-center justify-center gap-3 sm:gap-4 my-2">
+                    <span className="h-0.5 w-12 sm:w-16 bg-gray-700"></span>
                     it's how it <span className="text-white">works</span>
-                    <span className="h-0.5 w-16 bg-gray-700"></span>
+                    <span className="h-0.5 w-12 sm:w-16 bg-gray-700"></span>
                   </div>
                   — <span className="text-[#9333EA]">inside</span> and{" "}
                   <span className="text-white">out</span>.

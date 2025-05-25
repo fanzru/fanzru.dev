@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientLayoutShell from "./components/ClientLayoutShell";
 
@@ -10,11 +10,11 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-// Load Playfair Display font
-const playfair = Playfair_Display({
+// Load Mono font
+const mono = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-playfair",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${playfair.variable} font-sans bg-[#0B1120] text-white min-h-screen flex flex-col overflow-x-hidden scrollbar-gutter-stable`}
+        className={`${inter.variable} ${mono.variable} font-sans bg-[#0B1120] text-white min-h-screen flex flex-col overflow-x-hidden scrollbar-gutter-stable`}
         style={{ scrollbarGutter: "stable" }}
       >
         <ClientLayoutShell>{children}</ClientLayoutShell>

@@ -41,10 +41,7 @@ const Footer = () => {
         <section className="flex flex-col md:flex-row justify-between gap-8">
           {/* Logo and description */}
           <article className="space-y-4 flex-1">
-            <Link
-              href="/"
-              className="text-lg font-[var(--font-playfair)] italic"
-            >
+            <Link href="/" className="text-lg font-[var(--font-mono)] italic">
               fanzru.dev
             </Link>
             <p className="text-sm text-gray-400 max-w-xs">
